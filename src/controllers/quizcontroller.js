@@ -1,5 +1,5 @@
 const {unit_exists,add_time}=require('./misc')
-const Exam=require('../models/exam')
+const Quiz=require('../models/quiz')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -12,7 +12,7 @@ module.exports.create=async(req,res)=>{
         {
             return res.json({message:"questions and answers do not match"})
         }
-        const new_exam=new Exam({
+        const new_quiz=new Quiz({
             name:body.name,
             questions:body.questions,
             answers:body.answers,
@@ -20,11 +20,11 @@ module.exports.create=async(req,res)=>{
             unit:body.unit,
             level:unite.level
         })
-        new_exam.save().then(async(response)=>{
+        new_quiz.save().then(async(response)=>{
             
             if(response){
                 await add_time(body.unit,response.time)
-                return res.json({message:`Exam ( ${response.name} ) Created`,
+                return res.json({message:`quiz ( ${response.name} ) Created`,
                     data:response
             })
             }
