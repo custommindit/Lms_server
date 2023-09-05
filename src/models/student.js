@@ -20,7 +20,7 @@ const studentSchema = new Schema({
     },
     level:Number,
     myunits:[
-        {unit:String,progress:[String]}
+        {unit:String,sections:[String],quizez:[String],material:[String]}
     ],
     posts:[String],
 
