@@ -19,9 +19,9 @@ const studentSchema = new Schema({
         required:true
     },
     level:Number,
-    progress:{
-        type :Object
-    },
+    myunits:[
+        {unit:String,progress:[String]}
+    ],
     posts:[String],
 
 }, { timestamps: true })

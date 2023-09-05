@@ -1,4 +1,4 @@
-const {unit_exists}=require('./misc')
+const {unit_exists,add_time}=require('./misc')
 const Exam=require('../models/exam')
 
 module.exports.create=async(req,res)=>{
@@ -20,8 +20,10 @@ module.exports.create=async(req,res)=>{
             unit:body.unit,
             level:unite.level
         })
-        new_exam.save().then(response=>{
+        new_exam.save().then(async(response)=>{
+            
             if(response){
+                await add_time(body.unit,response.time)
                 return res.json({message:`Exam ( ${response.name} ) Created`,
                     data:response
             })

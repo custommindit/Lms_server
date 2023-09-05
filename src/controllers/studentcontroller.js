@@ -22,7 +22,7 @@ module.exports.signup = async (req, res) => {
         lastName: body.lastName,
         password: body.password,
         level: body.level,
-        progress: {},
+        myunits: [],
         posts: [],
       });
       new_student.save().then((response) => {
@@ -78,7 +78,7 @@ module.exports.login = async (req, res) => {
           }
 
           let token = jwt.sign(
-            { id: std.id, name: std.firstName,session_number:session_number },
+            { email: std.email, name: std.firstName,session_number:session_number,level:std.level },
             process.env.JWT_KEY
           );
           

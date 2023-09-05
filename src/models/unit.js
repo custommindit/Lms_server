@@ -15,6 +15,7 @@ const unitSchema = new Schema({
         type: Number,
         required:true
     },
+    elementcount:Number,
     image: {
         type: String,
         required:true
