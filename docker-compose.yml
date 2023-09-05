@@ -1,0 +1,12 @@
+version: "3.1"
+services:
+  LMS-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: LMS_app_container
+    # image: a7medabdo6/care_managment
+    volumes:
+      - ./src:/App/src:ro
+    ports:
+      - "8753:8753"
