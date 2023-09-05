@@ -3,13 +3,17 @@ const studentrouter=require('./api/studentrouter')
 const unitrouter=require('./api/unitrouter')
 const sectionrouter=require('./api/sectionrouter')
 const quizrouter=require('./api/quizrouter')
+const examrouter=require('./api/examrouter')
 
 router.use('/student',studentrouter)
 
 router.use('/unit',unitrouter)
 
 router.use('/section',sectionrouter)
-router.use('/exam',quizrouter)
+
+router.use('/quiz',quizrouter)
+
+router.use('/exam',examrouter)
 
 
 

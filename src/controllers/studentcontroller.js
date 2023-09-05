@@ -63,7 +63,7 @@ module.exports.login = async (req, res) => {
     }
     bcrypt.compare(body.password, std.password,async function (err, result) {
         if (err) {
-          res.json({
+          return res.json({
             error: err,
           });
         }

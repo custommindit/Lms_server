@@ -1,4 +1,5 @@
 const Unit=require('../models/unit')
+const {get_parts}=require('./misc')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -34,6 +35,23 @@ module.exports.my_level=async(req,res)=>{
             })
             }
         })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({message:"SOME ERROR OCCURED"})
+    }
+}
+module.exports.get_info=async(req,res)=>{
+    try {
+        const id=req.params.id
+        
+        const response=await get_parts(id)
+            if(response){
+                return res.json({
+                    message:"Success",
+                    data:response
+            })
+            }
+        
     } catch (error) {
         console.log(error.message)
         return res.json({message:"SOME ERROR OCCURED"})
