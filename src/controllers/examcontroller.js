@@ -6,11 +6,11 @@ module.exports.create=async(req,res)=>{
         let body=req.body
         const unite=await unit_exists(body.unit)
         if(unite===null){
-            return res.json({message:"Unit doesn't exist"})
+            return res.json({Success:false,message:"Unit doesn't exist"})
         }
         if(body.questions.length!==body.answers.length)
         {
-            return res.json({message:"questions and answers do not match"})
+            return res.json({Success:false,message:"questions and answers do not match"})
         }
         const new_exam=new Exam({
             name:unite.name,
@@ -25,15 +25,15 @@ module.exports.create=async(req,res)=>{
         new_exam.save().then(async(response)=>{
             
             if(response){
-                return res.json({message:`exam ( ${response.name} ) Created`,
+                return res.json({Success:true,message:`exam ( ${response.name} ) Created`,
                     data:response
             })
             }
             else
-            return res.json({message:"Creation Failed"})
+            return res.json({Success:false,message:"Creation Failed"})
         })
     } catch (error) {
         console.log(error.message)
-        return res.json({message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }

@@ -6,7 +6,7 @@ module.exports.create=async(req,res)=>{
         let body=req.body
         const unite=await unit_exists(body.unit)
         if(unite===null){
-            return res.json({message:"Unit doesn't exist"})
+            return res.json({Success:false,message:"Unit doesn't exist"})
         }
         const new_section=new Section({
             name:body.name,
@@ -20,13 +20,13 @@ module.exports.create=async(req,res)=>{
             
             if(response){
                 await add_time(body.unit,response.time)
-                return res.json({message:`Section ( ${response.name} ) Created`,
+                return res.json({Success:true,message:`Section ( ${response.name} ) Created`,
                     data:response
             })
             }
         })
     } catch (error) {
         console.log(error.message)
-        return res.json({message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }

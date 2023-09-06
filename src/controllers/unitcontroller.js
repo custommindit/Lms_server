@@ -15,13 +15,14 @@ module.exports.create=async(req,res)=>{
         new_unit.save().then(response=>{
             if(response){
                 return res.json({message:`Unit ( ${response.name} ) Created`,
+                Success:true,
                     data:response
             })
             }
         })
     } catch (error) {
         console.log(error.message)
-        return res.json({message:"SOME ERROR OCCURED"})
+        return res.json({Success:true,message:"SOME ERROR OCCURED"})
     }
 }
 module.exports.my_level=async(req,res)=>{
@@ -30,14 +31,14 @@ module.exports.my_level=async(req,res)=>{
         Unit.find({level:level}).then(response=>{
             if(response){
                 return res.json({
-                    message:"Success",
+                    Success:true,
                     data:response
             })
             }
         })
     } catch (error) {
         console.log(error.message)
-        return res.json({message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
 module.exports.get_info=async(req,res)=>{
@@ -47,13 +48,13 @@ module.exports.get_info=async(req,res)=>{
         const response=await get_parts(id)
             if(response){
                 return res.json({
-                    message:"Success",
+                    Success:true,
                     data:response
             })
             }
         
     } catch (error) {
         console.log(error.message)
-        return res.json({message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }

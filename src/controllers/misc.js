@@ -6,6 +6,10 @@ module.exports.unit_exists=async (id)=>{
     const unit= await Unit.findById(id)
     return unit
 }
+module.exports.section_exists=async (id)=>{
+    const section= await Section.findById(id)
+    return section
+}
 
 module.exports.add_time=async (id,time)=>{
     const unit= await Unit.findByIdAndUpdate(id,{$inc:{totaltime:time,elementcount:1}})

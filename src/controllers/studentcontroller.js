@@ -11,6 +11,7 @@ module.exports.signup = async (req, res) => {
     const isnewemail = await Student.isThisIDUsed(body.email);
     if (!isnewemail) {
       return res.json({
+        Success:false,
         message: "Already a member",
       });
     } else {
@@ -28,10 +29,12 @@ module.exports.signup = async (req, res) => {
       new_student.save().then((response) => {
         if (response.email)
           res.status(200).json({
+            Success:true,
             message: "Sign up is successful",
           });
         else
           res.json({
+            Success:false,
             message: "Some error occured",
           });
       });
@@ -50,6 +53,7 @@ module.exports.login = async (req, res) => {
     const std = await Student.findOne({ email: body.email });
     if (std === null) {
       return res.json({
+        Success:false,
         message: "Invalid Email or password",
       });
     }
@@ -57,6 +61,7 @@ module.exports.login = async (req, res) => {
     if (sess !== null) {
       if (sess.session_number !== session_number) {
         return res.json({
+          Success:false,
           message: "This Device is not recognized!",
         });
       }
@@ -64,7 +69,8 @@ module.exports.login = async (req, res) => {
     bcrypt.compare(body.password, std.password,async function (err, result) {
         if (err) {
           return res.json({
-            error: err,
+            Success:false,
+            message: "server error",
           });
         }
         if (result) {
@@ -84,12 +90,14 @@ module.exports.login = async (req, res) => {
           
           std.password = undefined;
           return res.json({
+            Success:true,
             message: "Login Successful!",
             token: token,
             data: std,
           });
         } else {
           return res.json({
+            Success:false,
             message: "Invalid Email or password",
           });
         }
@@ -97,6 +105,7 @@ module.exports.login = async (req, res) => {
   } catch (error) {
     console.log(error.message)
     return res.json({
+      Success:false,
       message: "Server error",
     });
   }

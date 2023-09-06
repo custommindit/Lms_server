@@ -20,6 +20,11 @@ const quizSchema = new Schema({
         required:true
         ///unit_id
     },
+    section: {
+        type: String,
+        required:true
+        ///unit_id
+    },
     level: {
         type: Number,
         required:true
