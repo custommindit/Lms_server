@@ -22,6 +22,7 @@ module.exports.signup = async (req, res) => {
         firstName: body.firstName,
         lastName: body.lastName,
         password: body.password,
+        phone:"",
         level: body.level,
         myunits: [],
         posts: [],
@@ -111,3 +112,46 @@ module.exports.login = async (req, res) => {
   }
 };
 
+
+module.exports.signup = async (req, res) => {
+  const body = req.body;
+  try {
+    const isnewemail = await Student.isThisIDUsed(body.email);
+    if (!isnewemail) {
+      return res.json({
+        Success:false,
+        message: "Already a member",
+      });
+    } else {
+      const salt = genSaltSync(10);
+      body.password = hashSync(body.password, salt);
+      const new_student = new Student({
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        password: body.password,
+        phone:"",
+        level: body.level,
+        myunits: [],
+        posts: [],
+      });
+      new_student.save().then((response) => {
+        if (response.email)
+          res.status(200).json({
+            Success:true,
+            message: "Sign up is successful",
+          });
+        else
+          res.json({
+            Success:false,
+            message: "Some error occured",
+          });
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.json({
+      message: "Some error occured",
+    });
+  }
+};

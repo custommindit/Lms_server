@@ -72,3 +72,47 @@ module.exports.get_all=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+module.exports.get_level=async(req,res)=>{
+    try {
+        const level=req.params.level
+        Unit.find({level:level}).then(response=>{
+            return res.json({
+                Success:true,
+                data:response
+        })
+        })        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+
+module.exports.update=async(req,res)=>{
+    try {
+        let body=req.body
+        Unit.findByIdAndUpdate(body._id,{
+            name:body.name,
+            price:body.price,
+            level:body.level,
+            image:body.image,
+        },{new:true}).then(response=>{
+            if(response){
+                return res.json({message:`Unit ( ${response.name} ) edited`,
+                Success:true,
+                data:response
+            })
+            }
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:true,message:"SOME ERROR OCCURED"})
+    }
+}
+module.exports.delete=async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:true,message:"SOME ERROR OCCURED"})
+    }
+}

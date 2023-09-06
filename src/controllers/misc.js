@@ -1,6 +1,7 @@
 const Unit=require('../models/unit')
 const Quiz=require('../models/quiz')
 const Section=require('../models/section')
+const Student=require('../models/student')
 
 module.exports.unit_exists=async (id)=>{
     const unit= await Unit.findById(id)
@@ -21,4 +22,26 @@ module.exports.get_parts=async (id)=>{
     const combinedData = [...quizez, ...sections];
     combinedData.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     return combinedData
+}
+module.exports.delete_parts=async (id)=>{
+    try{
+    await Quiz.deleteMany({unit:id})
+    await Section.deleteMany({unit:id})
+    return true
+}
+catch(error){
+    return false
+}
+}
+module.exports.delete_std_unit=async (id)=>{
+    try{
+        Student.updateMany(
+            { 'myunits.unit': id },
+            { $pull: { 'myunits': { unit: id } } }
+        )
+        return true
+    }
+    catch(error){
+        return false
+    }
 }

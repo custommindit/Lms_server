@@ -19,7 +19,9 @@ module.exports.create=async(req,res)=>{
             time:body.time,
             unit:section.unit,
             section:section._id,
-            level:section.level
+            level:section.level,
+            grading:body.grading,
+            graded:[]
         })
         new_quiz.save().then(async(response)=>{
             
