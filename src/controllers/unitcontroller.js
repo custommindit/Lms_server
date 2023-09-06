@@ -1,3 +1,4 @@
+const { response } = require('express')
 const Unit=require('../models/unit')
 const {get_parts}=require('./misc')
 
@@ -53,6 +54,19 @@ module.exports.get_info=async(req,res)=>{
             })
             }
         
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+module.exports.get_all=async(req,res)=>{
+    try {
+        Unit.find().then(response=>{
+            return res.json({
+                Success:true,
+                data:response
+        })
+        })        
     } catch (error) {
         console.log(error.message)
         return res.json({Success:false,message:"SOME ERROR OCCURED"})

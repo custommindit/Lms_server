@@ -5,6 +5,7 @@ const router= require("express").Router();
 router.post('/create',unitcontroller.create)
 router.get('/my_level',checkToken,unitcontroller.my_level)
 router.get('/info/:id',unitcontroller.get_info)
+router.get('/',unitcontroller.get_all)
 
 
 module.exports=router
