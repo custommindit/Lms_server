@@ -10,7 +10,7 @@ module.exports.create=async(req,res)=>{
             price:body.price,
             level:body.level,
             totaltime:0,
-            image:body.image,
+            image:req.file.path,
             elementcount:0
         })
         new_unit.save().then(response=>{
