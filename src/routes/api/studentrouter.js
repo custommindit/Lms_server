@@ -3,5 +3,6 @@ const router= require("express").Router();
 
 router.post('/sign_up',studentcontroller.signup)
 router.post('/login',studentcontroller.login)
+router.get('/personal',studentcontroller.getdata)
 
 module.exports=router
