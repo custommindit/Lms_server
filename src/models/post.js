@@ -3,10 +3,6 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema(
   {
-    user_image: {
-      type: String,
-      required: true,
-    },
     user_name: {
       type: String,
       required: true,
@@ -39,6 +35,7 @@ const postSchema = new Schema(
           type: String,
           required: true,
         },
+        _id:undefined,
         replies: [
           {
             text: String,
@@ -54,6 +51,7 @@ const postSchema = new Schema(
               type: String,
               required: true,
             },
+            _id:undefined
           },
         ],
       },

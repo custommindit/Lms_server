@@ -1,5 +1,6 @@
 const Student = require("../models/student");
 const Session = require("../models/session");
+const {unit_exists,add_time}=require('./misc')
 const bcrypt = require("bcrypt");
 const { hashSync, genSaltSync } = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -121,6 +122,33 @@ module.exports.getdata=async(req,res)=>{
   } catch (error) {
       return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
   }
+}
 
+module.exports.getall=async(req,res)=>{
+  try {
+    Student.find().select("firstName,lastName,email").then(std=>{
+      return res.json({data:std,sucess:true,message:"data fetched sucessfully"})
+    })
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+  }
+}
 
+module.exports.buy_unit=async(req,res)=>{
+  try {
+    if(req.body.decoded.admin){
+      const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+    Student.findOneAndUpdate({email:req.body.email},{ $push: { myunits: {unit:unite._id,
+      sections:[],quizez:[],material:[]} } },{new:true}).then(std=>{
+      return res.json({data:std,sucess:true,message:"enrolled sucessfully"})
+    })}
+    else{
+      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+    }
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+  }
 }
