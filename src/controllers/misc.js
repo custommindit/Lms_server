@@ -45,3 +45,16 @@ module.exports.delete_std_unit=async (id)=>{
         return false
     }
 }
+module.exports.check_progress=async (email,part)=>{
+    try{
+        Student.findOne(
+            { 'myunits.unit': id },
+            { $pull: { 'myunits': { unit: id } } }
+        )
+        return true
+    }
+    catch(error){
+        return false
+    }
+
+}
