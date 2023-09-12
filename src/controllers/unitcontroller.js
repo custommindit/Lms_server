@@ -94,7 +94,6 @@ module.exports.update=async(req,res)=>{
             name:body.name,
             price:body.price,
             level:body.level,
-            image:body.image,
         },{new:true}).then(response=>{
             if(response){
                 return res.json({message:`Unit ( ${response.name} ) edited`,

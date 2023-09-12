@@ -46,16 +46,3 @@ module.exports.delete_std_unit=async (id)=>{
         return false
     }
 }
-module.exports.check_progress=async (email,unit,part)=>{
-    try{
-        const std=Student.findOne({email:email,'myunits.unit':unit})
-        if(student===null){
-            return true
-        }
-        return false
-    }
-    catch(error){
-        return true
-    }
-
-}
