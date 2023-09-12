@@ -143,7 +143,7 @@ module.exports.buy_unit=async(req,res)=>{
             return res.json({Success:false,message:"Unit doesn't exist"})
         }
     Student.findOneAndUpdate({email:body.email},{ $push: { myunits: {unit:unite._id,
-      sections:[],quizez:[],material:[]} } },{new:true}).then(std=>{
+      sections:[],quizes:[],material:[]} } },{new:true}).then(std=>{
       return res.json({data:std,Success:true,message:"enrolled sucessfully"})
     })}
     else{
@@ -174,22 +174,56 @@ module.exports.deleteunit=async(req,res)=>{
 }
 
 
-
-module.exports.add_progress=async(req,res)=>{
+module.exports.add_progress = async (req, res) => {
   try {
-    const body=req.body
-    const category=Object.keys(body.parts)
-    switch(category[0]){
-    case 'sections':
+    const body = req.body;
+    const unit = body.unit;
+    const category = Object.keys(body.parts);
+    const studentEmail = body.decoded.email;
+    const student = await Student.findOne({ email: studentEmail });
+    /*body=
+    {unit:"_id",parts:{[section,material,quiz]:"_id"}}
+    */
+    if (!student) {
+      return res.json({ message: 'Student not found', Success: false });
+    }
 
-      break; 
-    case 'quizez':
+    const myUnit = student.myunits.find((unitObj) => unitObj.unit === unit);
 
-      break;
-    case 'material':
+    if (!myUnit) {
+      return res.json({ message: 'Unit not found', Success: false });
+    }
 
-      break;}
+    switch (category[0]) {
+      case 'section':
+
+        const uniqueSections = new Set(myUnit.sections);
+        myUnit.sections.forEach((section) => uniqueSections.add(section));
+        uniqueSections.add(body.parts.section)
+        myUnit.sections = Array.from(uniqueSections);
+        break;
+      case 'quiz':
+        const uniquequizes = new Set(myUnit.quizes);
+        myUnit.quizes.forEach((quiz) => uniquequizes.add(quiz));
+        uniquequizes.add(body.parts.quiz)
+        myUnit.quizes = Array.from(uniquequizes);
+        break;
+      case 'material':
+
+        const uniqueMaterial = new Set(myUnit.material);
+        myUnit.material.forEach((item) => uniqueMaterial.add(item));
+        uniqueMaterial.add(body.parts.material)
+        myUnit.material = Array.from(uniqueMaterial);
+        break;
+      default:
+        return res.json({ message: 'Invalid category', Success: false });
+    }
+
+    await student.save();
+
+    return res.json({ message: 'Progress added successfully', Success: true });
   } catch (error) {
-      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+    console.error('Error in add_progress:', error);
+    return res.json({ message: 'INTERNAL SERVER ERROR', Success: false });
   }
-}
+};

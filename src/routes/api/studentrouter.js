@@ -9,4 +9,6 @@ router.get('/list',checkToken,studentcontroller.getall)
 router.post('/enroll',checkToken,studentcontroller.buy_unit)
 router.post('/unenroll',checkToken,studentcontroller.deleteunit)
 
+router.post('/progress',checkToken,studentcontroller.add_progress)
+
 module.exports=router
