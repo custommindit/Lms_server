@@ -2,6 +2,7 @@ const Unit=require('../models/unit')
 const Quiz=require('../models/quiz')
 const Section=require('../models/section')
 const Student=require('../models/student')
+const { setDriver } = require('mongoose')
 
 module.exports.unit_exists=async (id)=>{
     const unit= await Unit.findById(id)
@@ -45,16 +46,16 @@ module.exports.delete_std_unit=async (id)=>{
         return false
     }
 }
-module.exports.check_progress=async (email,part)=>{
+module.exports.check_progress=async (email,unit,part)=>{
     try{
-        Student.findOne(
-            { 'myunits.unit': id },
-            { $pull: { 'myunits': { unit: id } } }
-        )
-        return true
+        const std=Student.findOne({email:email,'myunits.unit':unit})
+        if(student===null){
+            return true
+        }
+        return false
     }
     catch(error){
-        return false
+        return true
     }
 
 }

@@ -1,6 +1,6 @@
 const Student = require("../models/student");
 const Session = require("../models/session");
-const {unit_exists,add_time}=require('./misc')
+const {unit_exists,check_progress}=require('./misc')
 const bcrypt = require("bcrypt");
 const { hashSync, genSaltSync } = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -178,7 +178,10 @@ module.exports.deleteunit=async(req,res)=>{
 module.exports.add_progress=async(req,res)=>{
   try {
     const body=req.body
-    
+    const already_done=await check_progress(body.decoded.email,
+      body.unit,
+      body.part///{[material,quizez,sections],"hex-id"}
+      )
   } catch (error) {
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
