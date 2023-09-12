@@ -117,38 +117,58 @@ module.exports.login = async (req, res) => {
 module.exports.getdata=async(req,res)=>{
   try {
     Student.findOne({email:req.body.decoded.email}).select("-password").then(std=>{
-      return res.json({data:std,sucess:true,message:"data fetched sucessfully"})
+      return res.json({data:std,Success:true,message:"data fetched sucessfully"})
     })
   } catch (error) {
-      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
 
 module.exports.getall=async(req,res)=>{
   try {
     Student.find().select("firstName,lastName,email").then(std=>{
-      return res.json({data:std,sucess:true,message:"data fetched sucessfully"})
+      return res.json({data:std,Success:true,message:"data fetched sucessfully"})
     })
   } catch (error) {
-      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
 
 module.exports.buy_unit=async(req,res)=>{
   try {
-    if(req.body.decoded.admin){
+    const body=req.body
+    if(body.decoded.admin===true){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
         }
-    Student.findOneAndUpdate({email:req.body.email},{ $push: { myunits: {unit:unite._id,
+    Student.findOneAndUpdate({email:body.email},{ $push: { myunits: {unit:unite._id,
       sections:[],quizez:[],material:[]} } },{new:true}).then(std=>{
-      return res.json({data:std,sucess:true,message:"enrolled sucessfully"})
+      return res.json({data:std,Success:true,message:"enrolled sucessfully"})
     })}
     else{
-      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+      return res.json({message:"Auth Failed",Success:false})
     }
   } catch (error) {
-      return res.json({message:"INTERNAL SERVER ERROR",sucess:false})
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+
+module.exports.deleteunit=async(req,res)=>{
+  try {
+    const body=req.body
+    if(body.decoded.admin===true){
+      const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+    Student.findOneAndUpdate({email:body.email},{ $pull: { myunits: {unit:unite._id} } },{new:true}).then(std=>{
+      return res.json({data:std,Success:true,message:"Deleted sucessfully"})
+    })}
+    else{
+      return res.json({message:"Auth Failed",Success:false})
+    }
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }

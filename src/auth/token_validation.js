@@ -16,7 +16,7 @@ module.exports = {
           });
         } else {
           const  session=await Session.findOne({email:decoded.email,session_number:decoded.session_number})
-          if(session===null){
+          if(session===null&&decoded.admin!==true){
             return res.json({
               success: 0,
               message: "Invalid Session..."

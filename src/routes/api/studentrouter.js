@@ -7,5 +7,6 @@ router.post('/login',studentcontroller.login)
 router.get('/personal',checkToken,studentcontroller.getdata)
 router.get('/list',checkToken,studentcontroller.getall)
 router.post('/enroll',checkToken,studentcontroller.buy_unit)
+router.post('/unenroll',checkToken,studentcontroller.deleteunit)
 
 module.exports=router
