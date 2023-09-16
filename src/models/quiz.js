@@ -10,7 +10,7 @@ const quizSchema = new Schema({
         Q:String,
         choices:[String],
     }],
-    answers:[Number],
+    answers:[String],
     time: {
         type: Number,//in minuits
         required:true
