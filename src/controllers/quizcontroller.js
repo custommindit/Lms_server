@@ -95,7 +95,18 @@ module.exports.finish = async (req, res) => {
   };
   
   
-  
+  module.exports.getone=async(req,res)=>{
+    try {
+        let id=req.params.id
+        Quiz.findById(id).then(response=>{
+            return res.json({Success:true,data:response})
+        })
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
   
   
   

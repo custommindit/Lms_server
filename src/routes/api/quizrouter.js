@@ -4,9 +4,9 @@ const{checkToken}=require('../../auth/token_validation')
 
 
 router.post('/create',quizcontroller.create)
-
 router.post('/start',checkToken ,quizcontroller.start)
 router.post('/finish',checkToken ,quizcontroller.finish)
+router.post('/id/:id',checkToken ,quizcontroller.getone)
 
 
 module.exports=router

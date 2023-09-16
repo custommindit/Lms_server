@@ -30,3 +30,16 @@ module.exports.create=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+
+module.exports.getone=async(req,res)=>{
+    try {
+        let id=req.params.id
+        Section.findById(id).then(response=>{
+            return res.json({Success:true,data:response})
+        })
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}

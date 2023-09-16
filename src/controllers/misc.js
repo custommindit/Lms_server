@@ -20,9 +20,7 @@ module.exports.add_time=async (id,time)=>{
 module.exports.get_parts=async (id)=>{
     const quizez=await Quiz.find({unit:id}).select('-answers')
     const sections=await Section.find({unit:id})
-    const combinedData = [...quizez, ...sections];
-    combinedData.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-    return combinedData
+    return [quizez,sections]
 }
 module.exports.delete_parts=async (id)=>{
     try{
