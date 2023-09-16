@@ -14,7 +14,7 @@ module.exports.create=async(req,res)=>{
             return res.json({Success:false,message:"questions and answers do not match"})
         }
         const new_quiz=new Quiz({
-            name:body.name,
+            name:section.name,
             questions:body.questions,
             answers:body.answers,
             time:body.time,

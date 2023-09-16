@@ -46,12 +46,13 @@ module.exports.get_info=async(req,res)=>{
     try {
         const id=req.params.id
         
-        const [quizez,sections]=await get_parts(id)
+        const [quizez,sections,material]=await get_parts(id)
             if(response){
                 return res.json({
                     Success:true,
                     quizez:quizez,
-                    sections:sections
+                    sections:sections,
+                    material:material
             })
             }
         

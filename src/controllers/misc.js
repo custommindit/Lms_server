@@ -2,7 +2,7 @@ const Unit=require('../models/unit')
 const Quiz=require('../models/quiz')
 const Section=require('../models/section')
 const Student=require('../models/student')
-const { setDriver } = require('mongoose')
+const Material=require('../models/material')
 
 module.exports.unit_exists=async (id)=>{
     const unit= await Unit.findById(id)
@@ -20,12 +20,14 @@ module.exports.add_time=async (id,time)=>{
 module.exports.get_parts=async (id)=>{
     const quizez=await Quiz.find({unit:id}).select('-answers')
     const sections=await Section.find({unit:id})
+    const material=await Material.find({unit:id})
     return [quizez,sections]
 }
 module.exports.delete_parts=async (id)=>{
     try{
     await Quiz.deleteMany({unit:id})
     await Section.deleteMany({unit:id})
+    await Material.deleteMany({unit:id})
     return true
 }
 catch(error){

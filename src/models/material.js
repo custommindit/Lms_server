@@ -7,15 +7,11 @@ const materialSchema = new Schema({
         required:true
     },
     description: {
-        type: String,
-        required:true
-    },
+        type: String
+    },link:{type: String,
+        required:true},
     time: {
         type: Number,//in minuits
-        required:true
-    },
-    video: {
-        type: String,
         required:true
     },
     unit: {
