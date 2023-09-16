@@ -1,5 +1,6 @@
 const {section_exists,add_time}=require('./misc')
 const Quiz=require('../models/quiz')
+const { response } = require('express')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -39,3 +40,62 @@ module.exports.create=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+module.exports.start=async(req,res)=>{
+    try {
+        const body=req.body
+        const Q=await Quiz.findOne({_id:body.id,graded:{student:body.decoded.email}})
+        if(Q!==null){
+            return res.json({Success:false,message:"You have already accessed this quiz"})
+        }
+        else{
+            Quiz.findByIdAndUpdate(body.id,{$push:{graded:{
+                student:body.decoded.email,
+                grade:-1
+            }}}).then(response=>{
+                return res.json({Success:true,message:"Quiz timer started!!"})
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+module.exports.finish = async (req, res) => {
+    try {
+      const body = req.body;
+      const Q = await Quiz.findOne({
+        _id: body.id,
+        "graded.student": body.decoded.email,
+        "graded.grade": -1,
+      });
+      if (Q === null) {
+        return res.json({ Success: false, message: "You have not started this quiz???" });
+      } else {
+        let count = 0;
+  
+        for (let i = 0; i < body.choices.length; i++) {
+          if (body.choices[i] === Q.answers[i]) {
+            count++;
+          }
+        }
+        Quiz.updateOne(
+          { _id: Q._id, "graded.student": body.decoded.email },
+          { $set: { "graded.$.grade": count } }
+        )
+          .then((response) => {
+            return res.json({ Success: true, message: "Quiz graded " });
+          })
+          .catch((error) => {
+            return res.json({ Success: false, message: "Failed to update grade" });
+          });
+      }
+    } catch (error) {
+      return res.json({ Success: false, message: "SOME ERROR OCCURRED" });
+    }
+  };
+  
+  
+  
+  
+  
+  
