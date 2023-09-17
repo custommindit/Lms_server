@@ -46,13 +46,15 @@ module.exports.get_info=async(req,res)=>{
     try {
         const id=req.params.id
         
-        const [quizez,sections,material]=await get_parts(id)
+        const [quizes,sections,material]=await get_parts(id)
+        const U=await Unit.findById(id)
             if(response){
                 return res.json({
                     Success:true,
-                    quizez:quizez,
+                    quizes:quizes,
                     sections:sections,
-                    material:material
+                    material:material,
+                    unit:U
             })
             }
         
