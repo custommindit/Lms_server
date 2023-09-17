@@ -4,7 +4,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: LMS_app_container
+    container_name: lms_app_container
     # image: a7medabdo6/care_managment
     volumes:
       - ./src:/App/src:ro

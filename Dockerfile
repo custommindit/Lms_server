@@ -1,6 +1,6 @@
 FROM node:14.19.3
 
-WORKDIR /LMS_app
+WORKDIR /lms_app
 
 COPY package.json .
 
