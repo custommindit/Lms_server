@@ -1,6 +1,6 @@
 const { response } = require('express')
 const Unit=require('../models/unit')
-const {get_parts}=require('./misc')
+const {get_parts,buycount,delete_parts}=require('./misc')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -115,5 +115,22 @@ module.exports.delete=async(req,res)=>{
     } catch (error) {
         console.log(error.message)
         return res.json({Success:true,message:"SOME ERROR OCCURED"})
+    }
+}
+module.exports.get_std_number=async(req,res)=>{
+    try {
+        const id=req.params.id
+        
+        const count=await buycount(id)
+            if(count){
+                return res.json({
+                    Success:true,
+                    count:count
+            })
+            }
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }

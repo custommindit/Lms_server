@@ -21,7 +21,7 @@ module.exports.get_parts=async (id)=>{
     const quizez=await Quiz.find({unit:id}).select('-answers')
     const sections=await Section.find({unit:id})
     const material=await Material.find({unit:id})
-    return [quizez,sections]
+    return [quizez,sections,material]
 }
 module.exports.delete_parts=async (id)=>{
     try{
@@ -45,4 +45,9 @@ module.exports.delete_std_unit=async (id)=>{
     catch(error){
         return false
     }
+}
+
+module.exports.buycount=async (id)=>{
+    const counter=await Student.count({"myunits.unit":id})
+    return counter
 }
