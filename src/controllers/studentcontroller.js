@@ -1,5 +1,6 @@
 const Student = require("../models/student");
 const Session = require("../models/session");
+const Unit = require("../models/unit");
 const {unit_exists}=require('./misc')
 const bcrypt = require("bcrypt");
 const { hashSync, genSaltSync } = require("bcrypt");
@@ -126,7 +127,7 @@ module.exports.getdata=async(req,res)=>{
 
 module.exports.getall=async(req,res)=>{
   try {
-    Student.find().select("firstName,lastName,email").then(std=>{
+    Student.find().select("firstName,lastName,email,_id").then(std=>{
       return res.json({data:std,Success:true,message:"data fetched sucessfully"})
     })
   } catch (error) {
@@ -227,3 +228,25 @@ module.exports.add_progress = async (req, res) => {
     return res.json({ message: 'INTERNAL SERVER ERROR', Success: false });
   }
 };
+module.exports.getmyunitdata=async(req,res)=>{
+  try {
+    const myunits=await Student.findOne({email:req.body.decoded.email}).select("myunits")
+    if(myunits.length>0)
+     return res.json({message:"no units bought",Success:false})
+    var list=[]
+    for (let i = 0; i < myunits.length; i++) {
+      const [quizes,sections,material]=await get_parts(myunits[i].unit)
+      const U=await Unit.findById(myunits[i].unit)
+      list.push({quizes:quizes,
+        sections:sections,
+        material:material,
+        unit:U})
+    }
+    return res.json({
+      Success:true,
+      data:list
+})
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
