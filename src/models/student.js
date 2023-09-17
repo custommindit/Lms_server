@@ -26,7 +26,7 @@ const studentSchema = new Schema({
     myunits:[
         {unit:String,sections:[String],quizes:[String],material:[String]}
     ],
-    posts:[String],
+    //posts:[String],
 
 }, { timestamps: true })
 

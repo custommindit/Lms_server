@@ -26,7 +26,7 @@ module.exports.signup = async (req, res) => {
         phone:body.phone,
         level: body.level,
         myunits: [],
-        posts: [],
+       // posts: [],
       });
       new_student.save().then((response) => {
         if (response.email)
