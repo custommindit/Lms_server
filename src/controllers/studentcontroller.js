@@ -239,10 +239,12 @@ module.exports.getmyunitdata=async(req,res)=>{
 
       const [quizes,sections,material]=await get_parts(myunits.myunits[i].unit)
       const U=await Unit.findById(myunits.myunits[i].unit)
+      const done=(myunits.myunits[i].sections.length+myunits.myunits[i].quizes.length+myunits.myunits[i].material.length)
       list.push({quizes:quizes,
         sections:sections,
         material:material,
-        unit:U})
+        unit:U,
+        done:done})
     }
     return res.json({
       Success:true,
