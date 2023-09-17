@@ -33,10 +33,7 @@ const quizSchema = new Schema({
         type: Boolean,
         required:true
     },
-    graded:[{
-        student:String,
-        grade:Number
-    }]
+
 
 
 }, { timestamps: true })
