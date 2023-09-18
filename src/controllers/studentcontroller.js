@@ -266,10 +266,12 @@ module.exports.getmyquizdata=async(req,res)=>{
     for (var i = 0; i < myunits.myunits.length; i++) {
 
       const quizes=await get_quizes(myunits.myunits[i].unit)
+      const U=await Unit.findById(myunits.myunits[i].unit)
       const completed=myunits.myunits[i].quizes
       const grades=await Grade.find({student_email:req.body.decoded.email,quiz_id:{$in:completed}})
       list.push({
         quizes:quizes,
+        unit:U,
         completed:completed,
         grades:grades
       })
