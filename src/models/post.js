@@ -23,10 +23,7 @@ const postSchema = new Schema(
     comments: [
       {
         text: String,
-        user_image: {
-          type: String,
-          required: true,
-        },
+
         user_name: {
           type: String,
           required: true,
@@ -36,24 +33,6 @@ const postSchema = new Schema(
           required: true,
         },
         _id:undefined,
-        replies: [
-          {
-            text: String,
-            user_image: {
-              type: String,
-              required: true,
-            },
-            user_name: {
-              type: String,
-              required: true,
-            },
-            user_email: {
-              type: String,
-              required: true,
-            },
-            _id:undefined
-          },
-        ],
       },
     ],
   },

@@ -51,3 +51,9 @@ module.exports.buycount=async (id)=>{
     const counter=await Student.count({"myunits.unit":id})
     return counter
 }
+
+module.exports.get_quizes=async (id)=>{
+    const quizez=await Quiz.find({unit:id}).select('-answers')
+
+    return quizez
+}

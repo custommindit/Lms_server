@@ -1,7 +1,8 @@
 const Student = require("../models/student");
 const Session = require("../models/session");
 const Unit = require("../models/unit");
-const {unit_exists,get_parts}=require('./misc')
+const Grade = require("../models/grade");
+const {unit_exists,get_parts,get_quizes}=require('./misc')
 const bcrypt = require("bcrypt");
 const { hashSync, genSaltSync } = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -245,6 +246,35 @@ module.exports.getmyunitdata=async(req,res)=>{
         material:material,
         unit:U,
         done:done})
+    }
+    return res.json({
+      Success:true,
+      data:list
+})}
+  } catch (error) {
+    console.log(error.message)
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+module.exports.getmyquizdata=async(req,res)=>{
+  try {
+    const myunits=await Student.findOne({email:req.body.decoded.email}).select("myunits")
+    if(myunits.length<1){
+     return res.json({message:"no units bought",Success:false})}
+    else {
+     var list=[]
+    for (var i = 0; i < myunits.myunits.length; i++) {
+
+      const quizes=await get_quizes(myunits.myunits[i].unit)
+      const U=await Unit.findById(myunits.myunits[i].unit)
+      const completed=myunits.myunits[i].quizes
+      const grades=await Grade.find({student_email:req.body.decoded.email,quiz_id:{$in:completed}})
+      list.push({
+        quizes:quizes,
+        unit:U,
+        completed:completed,
+        grades:grades
+      })
     }
     return res.json({
       Success:true,
