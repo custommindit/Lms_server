@@ -89,9 +89,10 @@ module.exports.finish = async (req, res) => {
         }
       }
       Grade.findByIdAndUpdate(G._id,{
-        $set:{grade:count}
+        $set:{grade:count,choices:body.choices}
       })
         .then((response) => {
+
           return res.json({ Success: true, message: "Quiz graded " });
         })
         .catch((error) => {

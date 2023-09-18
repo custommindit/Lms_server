@@ -10,6 +10,7 @@ const gradeSchema = new Schema({
         type: String,
         required:true
     },
+    choices:[String],
     grade:{
         type:Number,
         required:true
