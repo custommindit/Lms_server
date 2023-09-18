@@ -81,8 +81,9 @@ module.exports.finish = async (req, res) => {
         message: "You have not started this quiz???",
       });
     } else {
-      const Q= Quiz.findById(body.id)
+      const Q= await Quiz.findById(body.id)
       let count = 0;
+      
       for (let i = 0; i < body.choices.length; i++) {
         if (body.choices[i] === Q.answers[i]) {
           count++;
@@ -97,12 +98,14 @@ module.exports.finish = async (req, res) => {
         })
         .catch((error) => {
           return res.json({
+
             Success: false,
             message: "Failed to update grade",
           });
         });
     }
   } catch (error) {
+    console.log(error)
     return res.json({ Success: false, message: "SOME ERROR OCCURRED" });
   }
 };
