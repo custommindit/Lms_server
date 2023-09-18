@@ -15,4 +15,6 @@ router.post('/progress',checkToken,studentcontroller.add_progress)
 
 router.post('/all_my_units',checkToken,studentcontroller.getmyunitdata)
 
+router.post('/all_my_quizes',checkToken,studentcontroller.getmyquizdata)
+
 module.exports=router
