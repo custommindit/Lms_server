@@ -58,6 +58,7 @@ module.exports.start = async (req, res) => {
         student_email: body.decoded.email,
         quiz_id: body.id,
         grade: -1,
+        choices:[]
       });
       new_grade.save().then((response) => {
         return res.json({ Success: true, message: "Quiz timer started!!" });

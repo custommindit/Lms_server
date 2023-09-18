@@ -15,7 +15,7 @@ module.exports.create=async(req,res)=>{
         new_post.save().then(async(response)=>{
             
             if(response){
-                return res.json({Success:true,message:`post ( ${response.name} ) Created`,
+                return res.json({Success:true,message:`post ( ${response.user_name} ) Created`,
                     data:response
             })
             }
