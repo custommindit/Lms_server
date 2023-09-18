@@ -1,7 +1,6 @@
 const { section_exists, add_time } = require("./misc");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
-const Student =require('../models/student')
 const { response } = require("express");
 
 module.exports.create = async (req, res) => {
@@ -76,7 +75,6 @@ module.exports.finish = async (req, res) => {
       quiz_id: body.id,
       student_email: body.decoded.email,
     });
-    const student = await Student.findOne({ email: body.decoded.email });
     if (G === null) {
       return res.json({
         Success: false,
@@ -93,13 +91,8 @@ module.exports.finish = async (req, res) => {
       Grade.findByIdAndUpdate(G._id,{
         $set:{grade:count,choices:body.choices}
       })
-        .then(async(response) => {
-          const myUnit = student.myunits.find((unitObj) => unitObj.unit === Q.unit);
-          const uniquequizes = new Set(myUnit.quizes);
-          myUnit.quizes.forEach((quiz) => uniquequizes.add(quiz));
-          uniquequizes.add(body.id)
-          myUnit.quizes = Array.from(uniquequizes);
-          await student.save();
+        .then((response) => {
+
           return res.json({ Success: true, message: "Quiz graded " });
         })
         .catch((error) => {
