@@ -41,7 +41,7 @@ module.exports.comment=async(req,res)=>{
             
             if(response){
                 return res.json({Success:true,message:`comment ( ${new_comment.user_name} ) Created`,
-                    data:new_comment
+                    data:response.comments[response.comments.length-1]
             })
             }
             else
