@@ -35,7 +35,7 @@ module.exports.comment=async(req,res)=>{
             user_name:body.decoded.name,
             user_email:body.decoded.email,
             text:body.text,
-            time:Date.now
+            time:Date.now()
         }
         Post.findByIdAndUpdate(req.params.id,{$push:{comments:new_comment}},{new:true}).then(async(response)=>{
             
