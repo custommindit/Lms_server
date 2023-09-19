@@ -27,7 +27,7 @@ module.exports.create=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
-module.exports.create=async(req,res)=>{
+module.exports.comment=async(req,res)=>{
     try {
         let body=req.body
         
@@ -36,15 +36,27 @@ module.exports.create=async(req,res)=>{
             user_email:body.decoded.email,
             text:body.text,
         }
-        new_post.save().then(async(response)=>{
+        Post.findByIdAndUpdate(req.params.id,{$push:{comments:new_comment}},{new:true}).then(async(response)=>{
             
             if(response){
-                return res.json({Success:true,message:`post ( ${response.user_name} ) Created`,
-                    data:response
+                return res.json({Success:true,message:`comment ( ${new_comment.user_name} ) Created`,
+                    data:new_comment
             })
             }
             else
             return res.json({Success:false,message:"Creation Failed"})
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+module.exports.all=async(req,res)=>{
+    try {
+        Post.find().then(async(response)=>{
+                return res.json({Success:true,
+                    response
+            })
         })
     } catch (error) {
         console.log(error.message)
