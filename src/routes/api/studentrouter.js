@@ -17,4 +17,6 @@ router.post('/all_my_units',checkToken,studentcontroller.getmyunitdata)
 
 router.post('/all_my_quizes',checkToken,studentcontroller.getmyquizdata)
 
+router.patch('/myinfo',checkToken,studentcontroller.updateinfo)
+
 module.exports=router

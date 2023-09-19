@@ -285,3 +285,17 @@ module.exports.getmyquizdata=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+module.exports.updateinfo=async(req,res)=>{
+  try {
+    const body=req.body
+    Student.findOneAndUpdate({email:body.decoded.email},{ phone:body.phone,firstName:body.firstName
+      ,lastName:body.lastName,level:body.level
+    }  ,{new:true}).then(std=>{
+      return res.json({data:std,Success:true,message:"updated sucessfully"})
+    })}
+    
+   catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
