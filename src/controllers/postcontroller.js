@@ -9,7 +9,7 @@ module.exports.create=async(req,res)=>{
             user_email:body.decoded.email,
             text:body.text,
             level:body.decoded.level,
-            image:req.file.path||"",
+            image:(req.file?.path!==undefined)?req.file.path:"",
             comments:[]
         })
         new_post.save().then(async(response)=>{
