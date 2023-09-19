@@ -18,7 +18,7 @@ module.exports.add_time=async (id,time)=>{
     return unit
 }
 module.exports.get_parts=async (id)=>{
-    const quizez=await Quiz.find({unit:id}).select('-answers')
+    const quizez=await Quiz.find({unit:id})
     const sections=await Section.find({unit:id})
     const material=await Material.find({unit:id})
     return [quizez,sections,material]
@@ -53,7 +53,7 @@ module.exports.buycount=async (id)=>{
 }
 
 module.exports.get_quizes=async (id)=>{
-    const quizez=await Quiz.find({unit:id}).select('-answers')
+    const quizez=await Quiz.find({unit:id})
 
     return quizez
 }

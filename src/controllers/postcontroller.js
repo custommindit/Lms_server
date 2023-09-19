@@ -27,3 +27,27 @@ module.exports.create=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+module.exports.create=async(req,res)=>{
+    try {
+        let body=req.body
+        
+        const new_comment={
+            user_name:body.decoded.name,
+            user_email:body.decoded.email,
+            text:body.text,
+        }
+        new_post.save().then(async(response)=>{
+            
+            if(response){
+                return res.json({Success:true,message:`post ( ${response.user_name} ) Created`,
+                    data:response
+            })
+            }
+            else
+            return res.json({Success:false,message:"Creation Failed"})
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}

@@ -6,6 +6,7 @@ const quizrouter=require('./api/quizrouter')
 const examrouter=require('./api/examrouter')
 const adminrouter=require('./api/adminrouter')
 const materialrouter=require('./api/materialrouter')
+const postrouter=require('./api/postrouter')
 
 
 router.use('/student',studentrouter)
@@ -21,5 +22,7 @@ router.use('/exam',examrouter)
 router.use('/admin',adminrouter)
 
 router.use('/material',materialrouter)
+
+router.use('/post',postrouter)
 
 module.exports=router
