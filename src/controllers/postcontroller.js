@@ -78,7 +78,7 @@ module.exports.by_level=async(req,res)=>{
 }
 module.exports.myposts=async(req,res)=>{
     try {
-        Post.find({user_email:body.decoded.email}).then(async(response)=>{
+        Post.find({user_email:req.body.decoded.email}).then(async(response)=>{
                 return res.json({Success:true,
                     response
             })
