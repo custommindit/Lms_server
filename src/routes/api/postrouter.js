@@ -7,5 +7,6 @@ router.post('/create',upload.single('media'),checkToken,postcontroller.create)
 router.post('/comment/:id',checkToken,postcontroller.comment)
 router.get('/all',postcontroller.all)
 router.get('/level/:level',postcontroller.by_level)
+router.get('/myposts',checkToken,postcontroller.myposts)
 
 module.exports=router

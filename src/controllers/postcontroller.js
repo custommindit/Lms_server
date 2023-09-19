@@ -76,3 +76,15 @@ module.exports.by_level=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+module.exports.myposts=async(req,res)=>{
+    try {
+        Post.find({user_email:body.decoded.email}).then(async(response)=>{
+                return res.json({Success:true,
+                    response
+            })
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
