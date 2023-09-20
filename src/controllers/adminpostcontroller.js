@@ -9,7 +9,7 @@ module.exports.create=async(req,res)=>{
         else{
         const new_post=new Adminpost({
             text:body.text,
-            link:body.link
+            link:body.link||""
         })
         new_post.save().then((response)=>{
             
