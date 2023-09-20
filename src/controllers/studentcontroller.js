@@ -326,7 +326,6 @@ module.exports.updatepassword=async(req,res)=>{
         return res.json({
           Success:true,
           message: "Login Successful!",
-          token: token,
           data: std,
         });})
       } else {
