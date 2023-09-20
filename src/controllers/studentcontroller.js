@@ -2,6 +2,8 @@ const Student = require("../models/student");
 const Session = require("../models/session");
 const Unit = require("../models/unit");
 const Grade = require("../models/grade");
+const Exam = require("../models/exam");
+const Examgrade = require("../models/examgrade");
 const {unit_exists,get_parts,get_quizes}=require('./misc')
 const bcrypt = require("bcrypt");
 const { hashSync, genSaltSync } = require("bcrypt");
@@ -353,6 +355,29 @@ module.exports.deleteme=async(req,res)=>{
     })}
     
    catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+
+
+
+module.exports.getmyexamdata=async(req,res)=>{
+  try {
+    const exams=await Exam.find({level:req.body.decoded.level})
+    var list=[]
+    for (var i = 0; i < exams.length; i++) {
+      const grades=await ExamGrade.find({student_email:req.body.decoded.email,exam_id:exams[i]})
+      list.push({
+        quizes:quizes,
+        grades:grades
+      })
+    }
+    return res.json({
+      Success:true,
+      data:list
+})
+  } catch (error) {
+    console.log(error.message)
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }

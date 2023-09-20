@@ -17,6 +17,8 @@ router.post('/all_my_units',checkToken,studentcontroller.getmyunitdata)
 
 router.post('/all_my_quizes',checkToken,studentcontroller.getmyquizdata)
 
+router.post('/all_my_exams',checkToken,studentcontroller.getmyexamdata)
+
 router.patch('/myinfo',checkToken,studentcontroller.updateinfo)
 
 router.patch('/updatepassword',checkToken,studentcontroller.updatepassword)
