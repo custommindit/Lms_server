@@ -302,6 +302,7 @@ module.exports.updateinfo=async(req,res)=>{
 module.exports.updatepassword=async(req,res)=>{
   try {
     const body=req.body
+    const salt = genSaltSync(10);
     const std = await Student.findOne({ email: body.decoded.email });
     if (std === null) {
       return res.json({
@@ -309,8 +310,8 @@ module.exports.updatepassword=async(req,res)=>{
         message: "no such user",
       });
     }
-    
-    bcrypt.compare(body.currentpassword, std.password,async function (err, result) {
+    console.log(body.password,std.password)
+    bcrypt.compare(body.password, std.password,async function (err, result) {
       if (err) {
         return res.json({
           Success:false,
@@ -318,20 +319,20 @@ module.exports.updatepassword=async(req,res)=>{
         });
       }
       if (result) {
-        const salt = genSaltSync(10);
         body.newpassword = hashSync(body.newpassword, salt);
         
         std.password = body.newpassword;
         std.save().then(result=>{
         return res.json({
           Success:true,
-          message: "Login Successful!",
+          message: "Updated Successfully!",
           data: std,
         });})
       } else {
+        console.log(result)
         return res.json({
           Success:false,
-          message: "Invalid Email or password",
+          message: "invalid password",
         });
       }
     });
