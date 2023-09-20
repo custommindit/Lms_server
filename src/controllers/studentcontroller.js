@@ -299,3 +299,46 @@ module.exports.updateinfo=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+module.exports.updatepassword=async(req,res)=>{
+  try {
+    const body=req.body
+    const std = await Student.findOne({ email: body.decoded.email });
+    if (std === null) {
+      return res.json({
+        Success:false,
+        message: "no such user",
+      });
+    }
+    
+    bcrypt.compare(body.currentpassword, std.password,async function (err, result) {
+      if (err) {
+        return res.json({
+          Success:false,
+          message: "server error",
+        });
+      }
+      if (result) {
+        const salt = genSaltSync(10);
+        body.newpassword = hashSync(body.newpassword, salt);
+        
+        std.password = body.newpassword;
+        std.save().then(result=>{
+        return res.json({
+          Success:true,
+          message: "Login Successful!",
+          token: token,
+          data: std,
+        });})
+      } else {
+        return res.json({
+          Success:false,
+          message: "Invalid Email or password",
+        });
+      }
+    });
+
+  }  
+   catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
