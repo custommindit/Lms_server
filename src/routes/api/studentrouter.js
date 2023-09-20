@@ -20,5 +20,6 @@ router.post('/all_my_quizes',checkToken,studentcontroller.getmyquizdata)
 router.patch('/myinfo',checkToken,studentcontroller.updateinfo)
 
 router.patch('/updatepassword',checkToken,studentcontroller.updatepassword)
+router.delete('/deleteme',checkToken,studentcontroller.deleteme)
 
 module.exports=router
