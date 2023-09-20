@@ -139,6 +139,8 @@ module.exports.get_std_number=async(req,res)=>{
 
 module.exports.all_units_data=async(req,res)=>{
     try {
+        
+        
         const [quizes,sections,material]=await get_parts(id)
         const U=await Unit.findById(id)
             if(response){

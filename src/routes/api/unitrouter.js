@@ -9,5 +9,6 @@ router.get('/info/:id',unitcontroller.get_info)
 router.get('/',unitcontroller.get_all)
 router.get('/level/:level',unitcontroller.get_level)
 router.put('/',unitcontroller.update)
+router.get('/buycount/:id',unitcontroller.get_std_number)
 
 module.exports=router
