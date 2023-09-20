@@ -353,6 +353,7 @@ module.exports.deleteme=async(req,res)=>{
     })}
     
    catch (error) {
+    console.log(error)
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
