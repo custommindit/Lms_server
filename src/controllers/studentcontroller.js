@@ -347,13 +347,12 @@ module.exports.deleteme=async(req,res)=>{
   try {
     const body=req.body
     Student.deleteOne({email:body.decoded.email},).then(async(std)=>{
-      await Grade.deleteMany({student_email:std.email})
-      await Session.deleteOne({email:std.email})
+      await Grade.deleteMany({student_email:body.decoded.email})
+      await Session.deleteOne({email:body.decoded.email})
       return res.json({data:std,Success:true,message:"deleted sucessfully"})
     })}
     
    catch (error) {
-    console.log(error)
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
