@@ -362,14 +362,15 @@ module.exports.deleteme=async(req,res)=>{
 
 
 module.exports.getmyexamdata=async(req,res)=>{
-  try {
+  try { 
     const exams=await Exam.find({level:req.body.decoded.level})
     var list=[]
     for (var i = 0; i < exams.length; i++) {
-      const grades=await ExamGrade.find({student_email:req.body.decoded.email,exam_id:exams[i]})
+      const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
+      console.log(grade)
       list.push({
-        quizes:quizes,
-        grades:grades
+        exam:exams[i],
+        grade:grade
       })
     }
     return res.json({
