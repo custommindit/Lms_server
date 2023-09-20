@@ -10,7 +10,7 @@ const examSchema = new Schema({
         Q:String,
         choices:[String],
     }],
-    answers:[Number],
+    answers:[String],
     time: {
         type: Number,//in minuits
         required:true
@@ -22,11 +22,6 @@ const examSchema = new Schema({
     end_time:{ 
         type:Date,
         required:true
-    },
-    unit: {
-        type: String,
-        required:true,
-        unique:true
     },
     level: {
         type: Number,

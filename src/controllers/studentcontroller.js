@@ -342,3 +342,17 @@ module.exports.updatepassword=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+module.exports.deleteme=async(req,res)=>{
+  try {
+    const body=req.body
+    Student.findOneAnddelete({email:body.decoded.email},).then(async(std)=>{
+      await Grade.deleteMany({student_email:std.email})
+      await Session.deleteOne({email:std.email})
+      return res.json({data:std,Success:true,message:"deleted sucessfully"})
+    })}
+    
+   catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
