@@ -346,7 +346,7 @@ module.exports.updatepassword=async(req,res)=>{
 module.exports.deleteme=async(req,res)=>{
   try {
     const body=req.body
-    Student.findOneAnddelete({email:body.decoded.email},).then(async(std)=>{
+    Student.deleteOne({email:body.decoded.email},).then(async(std)=>{
       await Grade.deleteMany({student_email:std.email})
       await Session.deleteOne({email:std.email})
       return res.json({data:std,Success:true,message:"deleted sucessfully"})
