@@ -8,7 +8,7 @@ module.exports.create=async(req,res)=>{
         }
         else{
         const exists=await Announcement.findOne({level:body.level})
-        if (exists.length!==null){
+        if (exists!==null){
             return res.json(
                 {Success:false,message:"Level already has an announcement"}
             )
