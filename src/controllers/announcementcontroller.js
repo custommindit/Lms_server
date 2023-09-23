@@ -69,7 +69,7 @@ module.exports.deleteone=async(req,res)=>{
 
 module.exports.bylevel=async(req,res)=>{
     try {
-        Announcement.find({level:req.params.level}).then(async(response)=>{
+        Announcement.findOne({level:req.params.level}).then(async(response)=>{
                 return res.json({Success:true,
                     response
             })
