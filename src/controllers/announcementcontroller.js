@@ -7,8 +7,8 @@ module.exports.create=async(req,res)=>{
             return res.json({Success:false,message:"Creation Failed"})
         }
         else{
-        const exists=await Announcement.find({level:body.level})
-        if (exists.length!==0){
+        const exists=await Announcement.findOne({level:body.level})
+        if (exists.length!==null){
             return res.json(
                 {Success:false,message:"Level already has an announcement"}
             )
