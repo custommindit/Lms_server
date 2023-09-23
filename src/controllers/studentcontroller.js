@@ -361,13 +361,13 @@ module.exports.deleteme=async(req,res)=>{
 
 module.exports.getmyexamdata=async(req,res)=>{
   try { 
-    const exams=await Exam.find({level:req.body.decoded.level,start_time: {
-      $gte: new Date()
-    }})
+    const date=new Date()
+    const exams=await Exam.find({level:req.body.decoded.level,start_time: {  $lte: date }})
     var list=[]
+    console.log(date)
     for (var i = 0; i < exams.length; i++) {
       const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
-      
+      console.log(exams[i].start_time)
       list.push({
         exam:exams[i],
         grade:grade
