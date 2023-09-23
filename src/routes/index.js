@@ -8,6 +8,7 @@ const adminrouter=require('./api/adminrouter')
 const materialrouter=require('./api/materialrouter')
 const postrouter=require('./api/postrouter')
 const adminpostrouter=require('./api/adminpostrouter')
+const announcementrouter=require('./api/announcementrouter')
 
 
 router.use('/student',studentrouter)
@@ -27,5 +28,7 @@ router.use('/material',materialrouter)
 router.use('/post',postrouter)
 
 router.use('/adminpost',adminpostrouter)
+
+router.use('/announcement',announcementrouter)
 
 module.exports=router
