@@ -130,7 +130,7 @@ module.exports.getdata=async(req,res)=>{
 
 module.exports.getall=async(req,res)=>{
   try {
-    Student.find().select().then(std=>{
+    Student.find().select('-password').then(std=>{
       return res.json({data:std,Success:true,message:"data fetched sucessfully"})
     })
   } catch (error) {
