@@ -383,3 +383,13 @@ module.exports.getmyexamdata=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+module.exports.get_by_level=async(req,res)=>{
+  try {
+    Student.find({level:req.params.level}).select('-password').then(std=>{
+      return res.json({data:std,Success:true,message:"data fetched sucessfully"})
+    })
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}

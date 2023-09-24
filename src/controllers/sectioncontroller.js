@@ -1,5 +1,6 @@
-const {unit_exists,add_time}=require('./misc')
+const {unit_exists,add_time,section_exists}=require('./misc')
 const Section=require('../models/section')
+const Quiz = require('../models/quiz')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -50,6 +51,20 @@ module.exports.updateone=async(req,res)=>{
         Section.findByIdAndUpdate(id,{$set:{description:req.body.description}}).then(response=>{
             return res.json({Success:true,data:response})
         })
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+
+module.exports.deleteone=async(req,res)=>{
+    try {
+        let id=req.params.id
+        const deleted=await Section.findByIdAndDelete(id,{$set:{description:req.body.description}})
+        const quizarr=Quiz.find({section:deleted._id})
+
+
         
     } catch (error) {
         console.log(error.message)
