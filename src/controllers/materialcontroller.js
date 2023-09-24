@@ -1,4 +1,4 @@
-const {unit_exists,add_time}=require('./misc')
+const {unit_exists,add_time,removematerialSTD}=require('./misc')
 const Material=require('../models/material')
 
 module.exports.create=async(req,res)=>{
@@ -21,6 +21,28 @@ module.exports.create=async(req,res)=>{
             if(response){
                 await add_time(body.unit,response.time)
                 return res.json({Success:true,message:`Material ( ${response.name} ) Created`,
+                    data:response
+            })
+            }
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+
+module.exports.deleteone=async(req,res)=>{
+    try {
+        let body=req.body
+        const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+        Material.findOneAndDelete({_id:body.material}).then(async(response)=>{
+            if(response){
+                removematerialSTD(body.material)
+                await add_time(body.unit,0-response.time)
+                return res.json({Success:true,message:`Material ( ${response.name} ) deleted`,
                     data:response
             })
             }

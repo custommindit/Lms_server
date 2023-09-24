@@ -43,3 +43,16 @@ module.exports.getone=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+
+module.exports.updateone=async(req,res)=>{
+    try {
+        let id=req.params.id
+        Section.findByIdAndUpdate(id,{$set:{description:req.body.description}}).then(response=>{
+            return res.json({Success:true,data:response})
+        })
+        
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}

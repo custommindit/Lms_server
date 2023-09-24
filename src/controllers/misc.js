@@ -14,7 +14,8 @@ module.exports.section_exists=async (id)=>{
 }
 
 module.exports.add_time=async (id,time)=>{
-    const unit= await Unit.findByIdAndUpdate(id,{$inc:{totaltime:time,elementcount:1}})
+    const count=time>0?1:-1
+    const unit= await Unit.findByIdAndUpdate(id,{$inc:{totaltime:time,elementcount:count}})
     return unit
 }
 module.exports.get_parts=async (id)=>{
@@ -56,4 +57,14 @@ module.exports.get_quizes=async (id)=>{
     const quizez=await Quiz.find({unit:id})
 
     return quizez
+}
+
+module.exports.removematerialSTD=async (id)=>{
+    Student.updateMany(
+        {},
+        {
+          $pull: {
+            'myunits.$[].material': id
+          }
+        })
 }

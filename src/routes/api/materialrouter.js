@@ -3,6 +3,7 @@ const router= require("express").Router();
 const {upload} = require('./uploader')
 
 router.post('/create',upload.single('media'), materialcontroller.create)
+router.delete('/one', materialcontroller.deleteone)
 
 
 module.exports=router
