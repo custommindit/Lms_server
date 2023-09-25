@@ -115,7 +115,7 @@ module.exports.delete=async(req,res)=>{
     try {
         if(req.body.decoded.admin){
         await delete_parts(req.params.id)
-        await delete_std_unit(req.parms.id)
+        await delete_std_unit(req.params.id)
         Unit.deleteOne({_id:req.params.id}).then(response=>{
             return res.json({Success:true,message:"Deleted"})
         })
