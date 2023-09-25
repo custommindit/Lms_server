@@ -42,10 +42,8 @@ catch(error){
 }
 module.exports.delete_std_unit=async (id)=>{
     try{
-        Student.updateMany(
-            { 'myunits.unit': id },
-            { $pull: { 'myunits': { unit: id } } }
-        )
+        await Student.updateMany({},{ $pull: { myunits: {unit:id} } })
+        
         return true
     }
     catch(error){
