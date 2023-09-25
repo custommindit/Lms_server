@@ -113,3 +113,17 @@ module.exports.finish = async (req, res) => {
       return res.json({ Success: false, message: "SOME ERROR OCCURRED" });
     }
   };
+
+  module.exports.deleteone=async(req,res)=>{
+    try {
+      if(req.body.decoded.admin)
+        Exam.find({id:req.params.id}).then(async(response)=>{
+              await Examgrade.deleteMany({exam_id:req.params})
+              await Exam.deleteOne({_id:req.params.id})
+              return res.json({Success:true,message:"Exam deleted"})
+        })
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}

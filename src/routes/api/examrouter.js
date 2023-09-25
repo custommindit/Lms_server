@@ -8,6 +8,7 @@ router.get('/mylevel',checkToken,examcontroller.by_my_level)
 router.get('/level',examcontroller.by_level)
 
 router.post('/finish',checkToken ,examcontroller.finish)
+router.delete('/:id',checkToken ,examcontroller.deleteone)
 
 
 module.exports=router

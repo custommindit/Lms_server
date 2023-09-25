@@ -8,5 +8,6 @@ router.post('/comment/:id',checkToken,postcontroller.comment)
 router.get('/all',postcontroller.all)
 router.get('/level/:level',postcontroller.by_level)
 router.get('/myposts',checkToken,postcontroller.myposts)
+router.delete('/:id',checkToken,postcontroller.deleteone)
 
 module.exports=router

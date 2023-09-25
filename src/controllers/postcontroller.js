@@ -88,3 +88,18 @@ module.exports.myposts=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+module.exports.deleteone=async(req,res)=>{
+    try {if(req.body.decoded.admin){
+        Post.deleteOne({_id:req.params.id}).then(async(response)=>{
+                return res.json({Success:true,
+                    response
+            })
+        })}
+        else{
+            return res.json({Success:false,message:"INVALID AUTH"})
+        }
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}

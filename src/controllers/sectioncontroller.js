@@ -1,6 +1,7 @@
-const {unit_exists,add_time,section_exists}=require('./misc')
+const {unit_exists,add_time,removequizSTD,removesectionSTD}=require('./misc')
 const Section=require('../models/section')
 const Quiz = require('../models/quiz')
+const Grade = require('../models/grade')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -60,12 +61,23 @@ module.exports.updateone=async(req,res)=>{
 
 module.exports.deleteone=async(req,res)=>{
     try {
+        if(!req.body.decoded.admin){
+            return res.json({Success:true,message:"INVALID auth"})
+        }
+        else{
         let id=req.params.id
         const deleted=await Section.findByIdAndDelete(id,{$set:{description:req.body.description}})
-        const quizarr=Quiz.find({section:deleted._id})
-
-
-        
+        const quizArr = await Quiz.find({ section: deletedSection._id });
+        await add_time(body.unit,0-deleted.time)
+        await removesectionSTD(id)
+        const deletePromises = quizArr.map(async (quiz) => {
+            await removequizSTD(quiz._id)
+            await add_time(body.unit, 0 - quiz.time);
+            await Quiz.findByIdAndDelete(quiz._id);
+            await Grade.deleteMany({ quiz_id: quiz._id });
+        });
+        await Promise.all(deletePromises);
+        return res.json({Success:false,message:"Section and its linked quizes deleted"})}
     } catch (error) {
         console.log(error.message)
         return res.json({Success:false,message:"SOME ERROR OCCURED"})

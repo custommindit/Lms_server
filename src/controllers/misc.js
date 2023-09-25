@@ -3,6 +3,7 @@ const Quiz=require('../models/quiz')
 const Section=require('../models/section')
 const Student=require('../models/student')
 const Material=require('../models/material')
+const Grade = require('../models/grade')
 
 module.exports.unit_exists=async (id)=>{
     const unit= await Unit.findById(id)
@@ -26,7 +27,11 @@ module.exports.get_parts=async (id)=>{
 }
 module.exports.delete_parts=async (id)=>{
     try{
-    await Quiz.deleteMany({unit:id})
+    const quizes =await Quiz.find({unit:id})
+    quizes.forEach(async(quiz) => {
+        Grade.deleteMany({quiz_id:quiz._id})
+        await quiz.deleteOne({_id:quiz._id})
+    });
     await Section.deleteMany({unit:id})
     await Material.deleteMany({unit:id})
     return true
@@ -55,7 +60,6 @@ module.exports.buycount=async (id)=>{
 
 module.exports.get_quizes=async (id)=>{
     const quizez=await Quiz.find({unit:id})
-
     return quizez
 }
 
@@ -65,6 +69,24 @@ module.exports.removematerialSTD=async (id)=>{
         {
           $pull: {
             'myunits.$[].material': id
+          }
+        })
+}
+module.exports.removequizSTD=async (id)=>{
+    Student.updateMany(
+        {},
+        {
+          $pull: {
+            'myunits.$[].quiz': id
+          }
+        })
+}
+module.exports.removesectionSTD=async (id)=>{
+    Student.updateMany(
+        {},
+        {
+          $pull: {
+            'myunits.$[].section': id
           }
         })
 }

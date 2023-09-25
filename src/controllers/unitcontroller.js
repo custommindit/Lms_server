@@ -1,6 +1,6 @@
 const { response } = require('express')
 const Unit=require('../models/unit')
-const {get_parts,buycount,delete_parts}=require('./misc')
+const {get_parts,buycount,delete_parts,delete_std_unit}=require('./misc')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -23,7 +23,7 @@ module.exports.create=async(req,res)=>{
         })
     } catch (error) {
         console.log(error.message)
-        return res.json({Success:true,message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
 module.exports.my_level=async(req,res)=>{
@@ -108,15 +108,24 @@ module.exports.update=async(req,res)=>{
         })
     } catch (error) {
         console.log(error.message)
-        return res.json({Success:true,message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
 module.exports.delete=async(req,res)=>{
     try {
-        
+        if(req.body.decoded.admin){
+        await delete_parts(req.params.id)
+        await delete_std_unit(req.parms.id)
+        Unit.deleteOne({_id:req.params.id}).then(response=>{
+            return res.json({Success:true,message:"Deleted"})
+        })
+        }
+        else{
+            return res.json({Success:false,message:"INVALID AUTH"})
+        }
     } catch (error) {
         console.log(error.message)
-        return res.json({Success:true,message:"SOME ERROR OCCURED"})
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
 module.exports.get_std_number=async(req,res)=>{
@@ -136,7 +145,7 @@ module.exports.get_std_number=async(req,res)=>{
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
-
+/*
 module.exports.all_units_data=async(req,res)=>{
     try {
         
@@ -157,4 +166,4 @@ module.exports.all_units_data=async(req,res)=>{
         console.log(error.message)
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
-}
+}*/
