@@ -92,7 +92,7 @@ module.exports.deleteone=async(req,res)=>{
     try {if(req.body.decoded.admin){
         Post.deleteOne({_id:req.params.id}).then(async(response)=>{
                 return res.json({Success:true,
-                    response
+                    message:"Deleted"
             })
         })}
         else{
