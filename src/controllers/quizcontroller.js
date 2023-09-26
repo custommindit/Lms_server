@@ -139,7 +139,7 @@ module.exports.my_grades = async (req, res) => {
 module.exports.allgrades = async (req, res) => {
   try {
     const id =req.params.id
-    var solvers=findquizsolvers(id)
+    var solvers=await findquizsolvers(id)
     var ll=[]
     solvers.forEach(grade => {
       ll.push({
