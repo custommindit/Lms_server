@@ -93,3 +93,14 @@ module.exports.removesectionSTD=async (id)=>{
           }
         })
 }
+
+
+module.exports.findquizsolvers=async (id)=>{
+    Student.find(
+          {
+            'myunits.$[].quizes': id
+          }
+        ).then(e=>{
+            return e
+        })
+}

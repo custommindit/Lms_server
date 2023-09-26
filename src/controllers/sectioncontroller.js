@@ -67,7 +67,7 @@ module.exports.deleteone=async(req,res)=>{
         else{
         let id=req.params.id
         const deleted=await Section.findByIdAndDelete(id,{$set:{description:req.body.description}})
-        const quizArr = await Quiz.find({ section: deletedSection._id });
+        const quizArr = await Quiz.find({ section: deleted._id });
         await add_time(body.unit,0-deleted.time)
         await removesectionSTD(id)
         const deletePromises = quizArr.map(async (quiz) => {

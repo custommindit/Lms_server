@@ -1,4 +1,4 @@
-const { section_exists, add_time } = require("./misc");
+const { section_exists, add_time,findquizsolvers } = require("./misc");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
 const { response } = require("express");
@@ -128,6 +128,20 @@ module.exports.my_grades = async (req, res) => {
     Grade.find({student_email:req.body.decoded.email}).then((response) => {
       return res.json({ Success: true, data: response });
     });
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ Success: false, message: "SOME ERROR OCCURED" });
+  }
+};
+
+
+
+module.exports.allgrades = async (req, res) => {
+  try {
+    const id =req.params.id
+    var solvers=findquizsolvers(id)
+    var STDemails= solvers.map(std=>std.email)
+
   } catch (error) {
     console.log(error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
