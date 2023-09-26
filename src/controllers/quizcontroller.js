@@ -140,7 +140,15 @@ module.exports.allgrades = async (req, res) => {
   try {
     const id =req.params.id
     var solvers=findquizsolvers(id)
-    var STDemails= solvers.map(std=>std.email)
+    var ll=[]
+    solvers.forEach(grade => {
+      ll.push({
+        email:grade.student_email,
+        choices:grade.choices,
+        grade:grade.grade
+      })
+    });
+    return res.json({Success:true,message:"fetched all relevent data",data:ll})
 
   } catch (error) {
     console.log(error.message);

@@ -96,9 +96,9 @@ module.exports.removesectionSTD=async (id)=>{
 
 
 module.exports.findquizsolvers=async (id)=>{
-    Student.find(
+    Grade.find(
           {
-            'myunits.$[].quizes': id
+            quiz_id: id
           }
         ).then(e=>{
             return e

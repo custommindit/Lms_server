@@ -55,7 +55,7 @@ module.exports.updateone=async(req,res)=>{
             ,name:req.body.name
         }}).then(async(response)=>{
             await Quiz.updateMany({section:req.params.id},{name:req.body.name})
-            return res.json({Success:true,data:response})
+            return res.json({Success:true,message:"Updated"})
         })
     } catch (error) {
         console.log(error.message)
