@@ -9,7 +9,7 @@ router.post('/finish',checkToken ,quizcontroller.finish)
 router.get('/id/:id',checkToken ,quizcontroller.getone)
 router.post('/my_grades',checkToken ,quizcontroller.my_grades)
 router.delete('/:id',checkToken ,quizcontroller.deleteone)
-router.delete('/grades/:id',checkToken ,quizcontroller.allgrades)
+router.get('/grades/:id',checkToken ,quizcontroller.allgrades)
 
 
 module.exports=router
