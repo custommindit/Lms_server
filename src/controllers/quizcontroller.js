@@ -1,4 +1,4 @@
-const { section_exists, add_time,findquizsolvers } = require("./misc");
+const { section_exists, add_time,findquizsolvers ,removequizSTD} = require("./misc");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
 const { response } = require("express");
@@ -142,6 +142,20 @@ module.exports.allgrades = async (req, res) => {
     var solvers=findquizsolvers(id)
     var STDemails= solvers.map(std=>std.email)
 
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ Success: false, message: "SOME ERROR OCCURED" });
+  }
+};
+module.exports.deleteone = async (req, res) => {
+  try {
+    let id = req.params.id;
+    Quiz.findById(id).then(async(response) => {
+        await removequizSTD(id)
+        await add_time(response.unit,0-response.time)
+        await Quiz.deleteOne({_id:id})
+        return  res.json({ Success: true, message: "Quiz deleted" });
+    });
   } catch (error) {
     console.log(error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });

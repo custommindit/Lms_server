@@ -8,6 +8,7 @@ router.post('/start',checkToken ,quizcontroller.start)
 router.post('/finish',checkToken ,quizcontroller.finish)
 router.get('/id/:id',checkToken ,quizcontroller.getone)
 router.post('/my_grades',checkToken ,quizcontroller.my_grades)
+router.delete('/:id',checkToken ,quizcontroller.deleteone)
 
 
 module.exports=router
