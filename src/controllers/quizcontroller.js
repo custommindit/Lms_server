@@ -1,4 +1,4 @@
-const { section_exists, add_time,findquizsolvers ,removequizSTD} = require("./misc");
+const { section_exists, add_time,removequizSTD} = require("./misc");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
 const { response } = require("express");
@@ -139,7 +139,7 @@ module.exports.my_grades = async (req, res) => {
 module.exports.allgrades = async (req, res) => {
   try {
     const id =req.params.id
-    var solvers=await findquizsolvers(id)
+    var solvers=await Grade.find({quiz_id:id})
     var ll=[]
     solvers.forEach(grade => {
       ll.push({

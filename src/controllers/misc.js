@@ -95,12 +95,3 @@ module.exports.removesectionSTD=async (id)=>{
 }
 
 
-module.exports.findquizsolvers=async (id)=>{
-    Grade.find(
-          {
-            quiz_id: id
-          }
-        ).then(e=>{
-            return e
-        })
-}
