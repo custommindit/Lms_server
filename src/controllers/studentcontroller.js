@@ -260,17 +260,17 @@ module.exports.getmyunitdata=async(req,res)=>{
 }
 module.exports.getmyquizdata=async(req,res)=>{
   try {
-    const myunits=await Student.findOne({email:req.body.decoded.email}).select("myunits")
+    const myunits=await Student.findOne({email:req.body.decoded.email})
     if(myunits.length<1){
      return res.json({message:"no units bought",Success:false})}
     else {
      var list=[]
     for (var i = 0; i < myunits.myunits.length; i++) {
-
       const quizes=await get_quizes(myunits.myunits[i].unit)
       const U=await Unit.findById(myunits.myunits[i].unit)
       const completed=myunits.myunits[i].quizes
       const grades=await Grade.find({student_email:req.body.decoded.email,quiz_id:{$in:completed}})
+      console.log(grades,completed)
       list.push({
         quizes:quizes,
         unit:U,
