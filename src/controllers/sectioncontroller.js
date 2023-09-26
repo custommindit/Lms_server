@@ -49,10 +49,14 @@ module.exports.getone=async(req,res)=>{
 module.exports.updateone=async(req,res)=>{
     try {
         let id=req.params.id
-        Section.findByIdAndUpdate(id,{$set:{description:req.body.description}}).then(response=>{
+        Section.findByIdAndUpdate(id,{$set:{
+            description:req.body.description
+            ,video:req.body.video
+            ,name:req.body.name
+        }}).then(async(response)=>{
+            await Quiz.updateMany({section:req.params.id},{name:req.body.name})
             return res.json({Success:true,data:response})
         })
-        
     } catch (error) {
         console.log(error.message)
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
