@@ -40,10 +40,10 @@ module.exports.deleteone=async(req,res)=>{
         }
         Material.findOneAndDelete({_id:body.material}).then(async(response)=>{
             if(response){
-                await removematerialSTD(body.material)
+                const ss=await removematerialSTD(body.material)
                 await add_time(body.unit,0-response.time)
                 return res.json({Success:true,message:`Material ( ${response.name} ) deleted`,
-                    data:response
+                    data:response,del:ss
             })
             }
         })

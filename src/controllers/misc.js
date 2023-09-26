@@ -80,6 +80,9 @@ module.exports.removequizSTD=async (id)=>{
             'myunits.$[].quiz': id
           }
         })
+        .then((e)=>{
+            return true
+        })
 }
 module.exports.removesectionSTD=async (id)=>{
     Student.updateMany(
