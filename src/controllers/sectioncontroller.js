@@ -77,8 +77,8 @@ module.exports.deleteone=async(req,res)=>{
             await Grade.deleteMany({ quiz_id: quiz._id });
         });
         await Promise.all(deletePromises);
-        await Quiz.deleteOne({_id:deleted._id})
-        return res.json({Success:false,message:"Section and its linked quizes deleted"})}
+        await Section.deleteOne({_id:deleted._id})
+        return res.json({Success:true,message:"Section and its linked quizes deleted"})}
     } catch (error) {
         console.log(error.message)
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
