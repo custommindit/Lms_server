@@ -68,6 +68,8 @@ module.exports.removematerialSTD=async (id)=>{
           $pull: {
             'myunits.$[].material': id
           }
+        }).then((e)=>{
+            return true
         })
 }
 module.exports.removequizSTD=async (id)=>{

@@ -118,7 +118,7 @@ module.exports.finish = async (req, res) => {
     try {
       if(req.body.decoded.admin)
         Exam.find({id:req.params.id}).then(async(response)=>{
-              await Examgrade.deleteMany({exam_id:req.params})
+              await Examgrade.deleteMany({exam_id:req.params.id})
               await Exam.deleteOne({_id:req.params.id})
               return res.json({Success:true,message:"Exam deleted"})
         })
