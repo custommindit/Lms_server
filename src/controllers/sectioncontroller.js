@@ -66,7 +66,7 @@ module.exports.deleteone=async(req,res)=>{
         }
         else{
         let id=req.params.id
-        const deleted=await Section.findByIdAndDelete(id)
+        const deleted=await Section.findById(id)
         const quizArr = await Quiz.find({ section: deleted._id });
         await add_time(deleted.unit,0-deleted.time)
         await removesectionSTD(id)
@@ -77,6 +77,7 @@ module.exports.deleteone=async(req,res)=>{
             await Grade.deleteMany({ quiz_id: quiz._id });
         });
         await Promise.all(deletePromises);
+        await Quiz.deleteOne({_id:deleted._id})
         return res.json({Success:false,message:"Section and its linked quizes deleted"})}
     } catch (error) {
         console.log(error.message)
