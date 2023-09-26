@@ -77,7 +77,7 @@ module.exports.removequizSTD=async (id)=>{
         {},
         {
           $pull: {
-            'myunits.$[].quiz': id
+            'myunits.$[].quizes': id
           }
         })
         .then((e)=>{
