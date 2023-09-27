@@ -5,7 +5,7 @@ const{checkToken}=require('../../auth/token_validation')
 router.post('/create',examcontroller.create)
 router.get('/',examcontroller.getall)
 router.get('/mylevel',checkToken,examcontroller.by_my_level)
-router.get('/level',examcontroller.by_level)
+router.get('/level/:level',examcontroller.by_level)
 
 router.post('/finish',checkToken ,examcontroller.finish)
 router.delete('/:id',checkToken ,examcontroller.deleteone)
