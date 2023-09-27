@@ -127,3 +127,23 @@ module.exports.finish = async (req, res) => {
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+
+module.exports.allgrades = async (req, res) => {
+  try {
+    const id =req.params.id
+    var solvers=await Examgrade.find({exam_id:id})
+    var ll=[]
+    solvers.forEach(grade => {
+      ll.push({
+        email:grade.student_email,
+        choices:grade.choices,
+        grade:grade.grade
+      })
+    });
+    return res.json({Success:true,message:"fetched all relevent data",data:ll})
+
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ Success: false, message: "SOME ERROR OCCURED" });
+  }
+};
