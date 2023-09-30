@@ -25,4 +25,8 @@ router.delete('/deleteme',checkToken,studentcontroller.deleteme)
 
 router.delete('/clearsession/:email',checkToken,studentcontroller.clear_session)
 
+router.post('/enrollmany',checkToken,studentcontroller.enroll_many_by_level)
+router.post('/enrollall',checkToken,studentcontroller.enroll_all)
+router.post('/unenrollall',checkToken,studentcontroller.deleteunit_all)
+
 module.exports=router

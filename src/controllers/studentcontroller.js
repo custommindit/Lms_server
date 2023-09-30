@@ -447,7 +447,7 @@ module.exports.enroll_all=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
-
+/*
 module.exports.deleteunit_many_by_level=async(req,res)=>{
   try {
     const body=req.body
@@ -465,7 +465,8 @@ module.exports.deleteunit_many_by_level=async(req,res)=>{
   } catch (error) {
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
-}
+}*/
+
 module.exports.deleteunit_all=async(req,res)=>{
   try {
     const body=req.body
@@ -474,8 +475,8 @@ module.exports.deleteunit_all=async(req,res)=>{
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
         }
-    Student.updateMany({level:body.level},{ $pull: { myunits: {unit:unite._id} } },{new:true}).then(std=>{
-      return res.json({data:std,Success:true,message:"Deleted sucessfully"})
+    Student.updateMany({},{ $pull: { myunits: {unit:unite._id} } },{new:true}).then(std=>{
+      return res.json({Success:true,message:"Deleted sucessfully"})
     })}
     else{
       return res.json({message:"Auth Failed",Success:false})
