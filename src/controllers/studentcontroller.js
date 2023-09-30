@@ -393,3 +393,17 @@ module.exports.get_by_level=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+
+module.exports.clear_session=async(req,res)=>{
+  try {
+    Session.deleteOne({email:req.params.email}).then(std=>{
+      if(std)
+      return res.json({data:std,Success:true,message:"session cleared sucessfully"})
+      else 
+      return res.json({Success:false,message:"session doesn't exist"})
+    })
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}

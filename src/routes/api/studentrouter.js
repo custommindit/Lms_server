@@ -23,4 +23,6 @@ router.patch('/myinfo',checkToken,studentcontroller.updateinfo)
 router.patch('/updatepassword',checkToken,studentcontroller.updatepassword)
 router.delete('/deleteme',checkToken,studentcontroller.deleteme)
 
+router.delete('/clearsession/:email',checkToken,studentcontroller.clear_session)
+
 module.exports=router
