@@ -398,11 +398,88 @@ module.exports.get_by_level=async(req,res)=>{
 module.exports.clear_session=async(req,res)=>{
   try {
     Session.deleteOne({email:req.params.email}).then(std=>{
-      if(std)
+      console.log(std)
+      if(std.deletedCount===1)
       return res.json({data:std,Success:true,message:"session cleared sucessfully"})
       else 
-      return res.json({Success:false,message:"session doesn't exist"})
+      return res.json({Success:true,message:"session doesn't exist"})
     })
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+module.exports.enroll_many_by_level=async(req,res)=>{
+  try {
+    const body=req.body
+    if(body.decoded.admin===true){
+      const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+    Student.updateMany({level:body.level,'myunits.unit': { $ne: unite._id }},{ $push: { myunits: {unit:unite._id,
+      sections:[],quizes:[],material:[]} } },{new:true}).then(std=>{
+      return res.json({Success:true,message:`enrolled all of level : ${body.level}`})
+    })}
+    else{
+      return res.json({message:"Auth Failed",Success:false})
+    }
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+
+module.exports.enroll_all=async(req,res)=>{
+  try {
+    const body=req.body
+    if(body.decoded.admin===true){
+      const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+    Student.updateMany({'myunits.unit': { $ne: unite._id }},{ $push: { myunits: {unit:unite._id,
+      sections:[],quizes:[],material:[]} } },{new:true}).then(std=>{
+      return res.json({Success:true,message:`enrolled all of level : ${body.level}`})
+    })}
+    else{
+      return res.json({message:"Auth Failed",Success:false})
+    }
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+
+module.exports.deleteunit_many_by_level=async(req,res)=>{
+  try {
+    const body=req.body
+    if(body.decoded.admin===true){
+      const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+    Student.updateMany({level:body.level},{ $pull: { myunits: {unit:unite._id} } },{new:true}).then(std=>{
+      return res.json({data:std,Success:true,message:"Deleted sucessfully"})
+    })}
+    else{
+      return res.json({message:"Auth Failed",Success:false})
+    }
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
+module.exports.deleteunit_all=async(req,res)=>{
+  try {
+    const body=req.body
+    if(body.decoded.admin===true){
+      const unite=await unit_exists(body.unit)
+        if(unite===null){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+    Student.updateMany({level:body.level},{ $pull: { myunits: {unit:unite._id} } },{new:true}).then(std=>{
+      return res.json({data:std,Success:true,message:"Deleted sucessfully"})
+    })}
+    else{
+      return res.json({message:"Auth Failed",Success:false})
+    }
   } catch (error) {
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
