@@ -438,7 +438,7 @@ module.exports.enroll_all=async(req,res)=>{
         }
     Student.updateMany({'myunits.unit': { $ne: unite._id }},{ $push: { myunits: {unit:unite._id,
       sections:[],quizes:[],material:[]} } },{new:true}).then(std=>{
-      return res.json({Success:true,message:`enrolled all of level : ${body.level}`})
+      return res.json({Success:true,message:`enrolled all students`})
     })}
     else{
       return res.json({message:"Auth Failed",Success:false})
