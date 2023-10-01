@@ -489,7 +489,7 @@ module.exports.deleteunit_all=async(req,res)=>{
 module.exports.clear_all_session=async(req,res)=>{
   try {
     Session.deleteMany().then(()=>{
-      return res.json({Success:true,message:"session cleared sucessfully"})
+      return res.json({Success:true,message:"All sessions cleared sucessfully"})
     })
   } catch (error) {
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
