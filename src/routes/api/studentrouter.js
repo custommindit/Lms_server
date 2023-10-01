@@ -29,4 +29,6 @@ router.post('/enrollmany',checkToken,studentcontroller.enroll_many_by_level)
 router.post('/enrollall',checkToken,studentcontroller.enroll_all)
 router.post('/unenrollall',checkToken,studentcontroller.deleteunit_all)
 
+router.delete('/clearallsession',checkToken,studentcontroller.clear_all_session)
+
 module.exports=router
