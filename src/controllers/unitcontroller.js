@@ -4,6 +4,7 @@ const {get_parts,buycount,delete_parts,delete_std_unit}=require('./misc')
 
 module.exports.create=async(req,res)=>{
     try {
+        console.log(req.file)
         let body=req.body
         const new_unit=new Unit({
             name:body.name,
