@@ -7,7 +7,7 @@ module.exports.create=async(req,res)=>{
     try {
         let body=req.body
         const unite=await unit_exists(body.unit)
-        if(unite===null){
+        if(unite===null||!req.body.decoded.admin){
             return res.json({Success:false,message:"Unit doesn't exist"})
         }
         const new_section=new Section({
@@ -83,6 +83,39 @@ module.exports.deleteone=async(req,res)=>{
         await Promise.all(deletePromises);
         await Section.deleteOne({_id:deleted._id})
         return res.json({Success:true,message:"Section and its linked quizes deleted"})}
+    } catch (error) {
+        console.log(error.message)
+        return res.json({Success:false,message:"SOME ERROR OCCURED"})
+    }
+}
+
+
+module.exports.createwithupload=async(req,res)=>{
+    try {
+        let body=req.body
+        const unite=await unit_exists(body.unit)
+        if(unite===null||!req.body.decoded.admin){
+            return res.json({Success:false,message:"Unit doesn't exist"})
+        }
+        if(req.file.path===undefined){
+            return res.json({Success:false,message:"invalid video"})
+        }
+        const new_section=new Section({
+            name:body.name,
+            description:body.description,
+            time:body.time,
+            video:req.file.path,
+            unit:body.unit,
+            level:unite.level
+        })
+        new_section.save().then(async(response)=>{
+            if(response){
+                await add_time(body.unit,response.time)
+                return res.json({Success:true,message:`Section ( ${response.name} ) Created`,
+                    data:response
+            })
+            }
+        })
     } catch (error) {
         console.log(error.message)
         return res.json({Success:false,message:"SOME ERROR OCCURED"})

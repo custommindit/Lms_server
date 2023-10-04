@@ -1,8 +1,10 @@
 const { checkToken } = require('../../auth/token_validation');
 const sectioncontroller=require('../../controllers/sectioncontroller')
 const router= require("express").Router();
+const {upload} = require('./uploader')
 
-router.post('/create',sectioncontroller.create)
+router.post('/create',checkToken,sectioncontroller.create)
+router.post('/createupload',upload.single("media"),checkToken,sectioncontroller.createwithupload)
 router.get('/id/:id',sectioncontroller.getone)
 router.put('/update/:id',checkToken,sectioncontroller.updateone)
 router.delete('/:id',checkToken,sectioncontroller.deleteone)
