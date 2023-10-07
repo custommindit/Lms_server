@@ -164,7 +164,7 @@ module.exports.update_exam=async(req,res)=>{
       start_time:start_time,
       end_time:end_time,
   }
-  Exam.findOneAndUpdate({_id:req.params.id,start_time: {  $lte: date }},updates)
+  Exam.findOneAndUpdate({_id:id,start_time: {  $lte: date }},updates)
     return res.json({
       Success:true,
       message:"Updated"
