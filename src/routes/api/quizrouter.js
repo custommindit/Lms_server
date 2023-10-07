@@ -10,6 +10,6 @@ router.get('/id/:id',checkToken ,quizcontroller.getone)
 router.post('/my_grades',checkToken ,quizcontroller.my_grades)
 router.delete('/:id',checkToken ,quizcontroller.deleteone)
 router.get('/grades/:id',checkToken ,quizcontroller.allgrades)
-
+router.put('/:id',checkToken ,quizcontroller.update)
 
 module.exports=router

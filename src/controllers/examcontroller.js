@@ -152,7 +152,15 @@ module.exports.update_exam=async(req,res)=>{
   try { 
     const date=new Date()
     const exam=await Exam.findOne({_id:req.params.id,start_time: {  $lte: date }})
-    var list=[]
+    var updates={
+      name:body.name,
+      questions:body.questions,
+      answers:body.answers,
+      time:body.time,
+      level:body.level,
+      start_time:start_time,
+      end_time:end_time,
+  }
     console.log(date)
     for (var i = 0; i < exams.length; i++) {
       const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})

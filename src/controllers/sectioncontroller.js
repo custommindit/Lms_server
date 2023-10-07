@@ -7,6 +7,7 @@ const {
 const Section = require("../models/section");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
+const Unit = require("../models/unit");
 
 module.exports.create = async (req, res) => {
   try {
@@ -70,7 +71,8 @@ module.exports.updateone = async (req, res) => {
         { section: req.params.id },
         { name: req.body.name }
       );
-      await unit.updateone({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
+      await Unit.updateone({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
+      await Quiz.updateMany({section:current._id},{name:req.body.name})
       return res.json({ Success: true, message: "Updated" });
     });
   } catch (error) {
