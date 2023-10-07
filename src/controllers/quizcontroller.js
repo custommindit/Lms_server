@@ -177,9 +177,9 @@ module.exports.deleteone = async (req, res) => {
 
 module.exports.update = async (req, res) => {
   try {
-    let id = req.params.id;
+    let id =req.params.id
     if(req.body.decoded.admin)
-    Quiz.updateOne(id,{questions:req.body.questions,answers:req.body.answers}).then((response) => {
+    Quiz.findByIdAndUpdate(id,{questions:req.body.questions,answers:req.body.answers}).then((response) => {
       return  res.json({ Success: true, message: "Quiz updated" });
     });
     else{

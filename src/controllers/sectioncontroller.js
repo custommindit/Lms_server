@@ -72,6 +72,7 @@ module.exports.updateone = async (req, res) => {
         { name: req.body.name }
       );
       await Unit.updateOne({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
+      console.log()
       await Quiz.updateMany({section:current._id},{name:req.body.name})
       return res.json({ Success: true, message: "Updated" });
     });
