@@ -161,6 +161,7 @@ module.exports.update_exam=async(req,res)=>{
       questions:body.questions,
       answers:body.answers,
       time:body.time,
+      level:body.level,
       start_time:start_time,
       end_time:end_time,
   }
