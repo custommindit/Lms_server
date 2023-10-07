@@ -164,11 +164,13 @@ module.exports.update_exam=async(req,res)=>{
       start_time:start_time,
       end_time:end_time,
   }
-  Exam.findOneAndUpdate({_id:id,start_time: {  $gte: date }},updates)
+  Exam.findOneAndUpdate({_id:id,start_time: {  $gte: date }},updates).then(()=>{
     return res.json({
       Success:true,
       message:"Updated"
 })
+  })
+   
   } catch (error) {
     console.log(error.message)
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
