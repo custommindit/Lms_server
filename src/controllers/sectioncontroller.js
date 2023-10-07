@@ -61,7 +61,7 @@ module.exports.updateone = async (req, res) => {
         name: req.body.name,
         time:req.body.time
       };
-    if(req.file.path){
+    if(req.file!==undefined){
         toupdate.video="http://5.183.9.124:8753/" + req.file.path
     }
     Section.findByIdAndUpdate(id, 
