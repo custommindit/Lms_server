@@ -104,7 +104,7 @@ module.exports.createwithupload=async(req,res)=>{
             name:body.name,
             description:body.description,
             time:body.time,
-            video:req.file.path,
+            video:("http://5.183.9.124:8753/"+req.file.path),
             unit:body.unit,
             level:unite.level
         })
