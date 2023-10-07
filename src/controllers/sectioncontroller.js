@@ -54,9 +54,11 @@ module.exports.getone = async (req, res) => {
 module.exports.updateone = async (req, res) => {
   try {
     let id = req.params.id;
+    const current = await Section.findOne({_id:id})
     var toupdate = {
         description: req.body.description,
         name: req.body.name,
+        time:req.body.time
       };
     if(req.file.path){
         toupdate.video="http://5.183.9.124:8753/" + req.file.path
@@ -68,6 +70,7 @@ module.exports.updateone = async (req, res) => {
         { section: req.params.id },
         { name: req.body.name }
       );
+      await unit.updateone({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
       return res.json({ Success: true, message: "Updated" });
     });
   } catch (error) {

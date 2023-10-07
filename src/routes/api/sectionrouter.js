@@ -6,7 +6,7 @@ const {upload} = require('./uploader')
 router.post('/create',checkToken,sectioncontroller.create)
 router.post('/createupload',upload.single("media"),checkToken,sectioncontroller.createwithupload)
 router.get('/id/:id',sectioncontroller.getone)
-router.put('/update/:id',checkToken,sectioncontroller.updateone)
+router.put('/update/:id',upload.single("media"),checkToken,sectioncontroller.updateone)
 router.delete('/:id',checkToken,sectioncontroller.deleteone)
 
 
