@@ -54,11 +54,13 @@ module.exports.getone = async (req, res) => {
 module.exports.updateone = async (req, res) => {
   try {
     let id = req.params.id;
-      var toupdate = {
+    var toupdate = {
         description: req.body.description,
-        video: req.file.path,
         name: req.body.name,
       };
+    if(req.file.path){
+        toupdate.video="http://5.183.9.124:8753/" + req.file.path
+    }
     Section.findByIdAndUpdate(id, 
         toupdate
     ).then(async (response) => {
