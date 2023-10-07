@@ -61,7 +61,7 @@ module.exports.updateone = async (req, res) => {
         name: req.body.name,
         time:req.body.time
       };
-    if(req.file!==undefined){
+    if(req.file!==undefi){
         toupdate.video="http://5.183.9.124:8753/" + req.file.path
     }
     Section.findByIdAndUpdate(id, 
@@ -71,7 +71,7 @@ module.exports.updateone = async (req, res) => {
         { section: req.params.id },
         { name: req.body.name }
       );
-      await Unit.updateone({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
+      await Unit.updateOne({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
       await Quiz.updateMany({section:current._id},{name:req.body.name})
       return res.json({ Success: true, message: "Updated" });
     });
