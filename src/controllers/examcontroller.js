@@ -1,5 +1,6 @@
 const Examgrade = require("../models/examgrade");
 const Exam=require('../models/exam')
+const mongoose = require('mongoose')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -151,29 +152,22 @@ module.exports.allgrades = async (req, res) => {
 module.exports.update_exam=async(req,res)=>{
   try { 
     const date=new Date()
-    const exam=await Exam.findOne({_id:req.params.id,start_time: {  $lte: date }})
+    const body=req.body
+    const id=new mongoose.Types.ObjectId(req.params.id)
+    const start_time=new Date(body.start_time.year,body.start_time.month-1,body.start_time.day,body.start_time.hour)
+    const end_time=new Date(body.end_time.year,body.end_time.month-1,body.end_time.day,body.end_time.hour)
     var updates={
       name:body.name,
       questions:body.questions,
       answers:body.answers,
       time:body.time,
-      level:body.level,
       start_time:start_time,
       end_time:end_time,
   }
-    console.log(date)
-    for (var i = 0; i < exams.length; i++) {
-      const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
-      list.push({
-        exam:exams[i],
-        grade:grade,
-        
-      })
-    }
+  Exam.findOneAndUpdate({_id:req.params.id,start_time: {  $lte: date }},updates)
     return res.json({
       Success:true,
-      data:list,
-      currenttime:date
+      message:"Updated"
 })
   } catch (error) {
     console.log(error.message)
