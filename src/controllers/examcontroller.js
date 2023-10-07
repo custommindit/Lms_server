@@ -147,3 +147,28 @@ module.exports.allgrades = async (req, res) => {
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
+
+module.exports.update_exam=async(req,res)=>{
+  try { 
+    const date=new Date()
+    const exam=await Exam.findOne({_id:req.params.id,start_time: {  $lte: date }})
+    var list=[]
+    console.log(date)
+    for (var i = 0; i < exams.length; i++) {
+      const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
+      list.push({
+        exam:exams[i],
+        grade:grade,
+        
+      })
+    }
+    return res.json({
+      Success:true,
+      data:list,
+      currenttime:date
+})
+  } catch (error) {
+    console.log(error.message)
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}

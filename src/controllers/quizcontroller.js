@@ -158,12 +158,33 @@ module.exports.allgrades = async (req, res) => {
 module.exports.deleteone = async (req, res) => {
   try {
     let id = req.params.id;
+    if(req.body.decoded.admin)
     Quiz.findById(id).then(async(response) => {
         await removequizSTD(id)
         await add_time(response.unit,0-response.time)
         await Quiz.deleteOne({_id:id})
         return  res.json({ Success: true, message: "Quiz deleted" });
     });
+    else{
+      return  res.json({ Success: false, message: "invalid auth" });
+    }
+
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ Success: false, message: "SOME ERROR OCCURED" });
+  }
+};
+
+module.exports.update = async (req, res) => {
+  try {
+    let id = req.params.id;
+    if(req.body.decoded.admin)
+    Quiz.updateOne(id,{questions:req.body.questions,answers:req.body.answers}).then((response) => {
+      return  res.json({ Success: true, message: "Quiz updated" });
+    });
+    else{
+      return  res.json({ Success: false, message: "invalid auth" });
+    }
   } catch (error) {
     console.log(error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
