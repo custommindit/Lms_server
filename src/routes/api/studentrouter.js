@@ -31,4 +31,7 @@ router.post('/unenrollall',checkToken,studentcontroller.deleteunit_all)
 
 router.delete('/clearallsession',checkToken,studentcontroller.clear_all_session)
 
+
+router.post('/abd',checkToken,studentcontroller.abdullah)
+
 module.exports=router
