@@ -495,7 +495,7 @@ module.exports.clear_all_session=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
-module.exports.getmyexamdata=async(req,res)=>{
+module.exports.abdullah=async(req,res)=>{
   try { 
     const date=new Date()
     const exams=await Exam.find({level:req.body.decoded.level})
