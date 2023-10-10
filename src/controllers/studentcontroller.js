@@ -495,11 +495,12 @@ module.exports.clear_all_session=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
-module.exports.abdullah=async(req,res)=>{
+module.exports.getmyexamdata=async(req,res)=>{
   try { 
-
+    const date=new Date()
     const exams=await Exam.find({level:req.body.decoded.level})
     var list=[]
+    console.log(date)
     for (var i = 0; i < exams.length; i++) {
       const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
       list.push({
@@ -511,6 +512,7 @@ module.exports.abdullah=async(req,res)=>{
     return res.json({
       Success:true,
       data:list,
+      currenttime:date
 })
   } catch (error) {
     console.log(error.message)
