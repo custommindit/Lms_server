@@ -519,3 +519,18 @@ module.exports.abdullah=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+module.exports.getQuery=async(req,res)=>{
+  try {
+    if(req.body.decoded.admin){
+      let regex = new RegExp(req.params.query,'i');
+    Student.find({email:regex}).select('-password').then(std=>{
+      return res.json({data:std,Success:true,message:"data fetched sucessfully"})
+    })}
+    else{
+      res.json({data:[],Success:false,message:"data fetched sucessfully"})
+    }
+  } catch (error) {
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}

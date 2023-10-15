@@ -34,4 +34,6 @@ router.delete('/clearallsession',checkToken,studentcontroller.clear_all_session)
 
 router.post('/abd',checkToken,studentcontroller.abdullah)
 
+router.get('/search/:query',checkToken,studentcontroller.getQuery)
+
 module.exports=router
