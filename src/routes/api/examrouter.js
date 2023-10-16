@@ -13,5 +13,7 @@ router.delete('/:id',checkToken ,examcontroller.deleteone)
 router.get('/grades/:id',checkToken,examcontroller.allgrades)
 
 router.put('/:id',checkToken ,examcontroller.update_exam)
+router.patch('/:id',checkToken ,examcontroller.update_exam_showgrade)
+
 
 module.exports=router

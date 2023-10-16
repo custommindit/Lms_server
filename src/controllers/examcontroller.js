@@ -165,7 +165,6 @@ module.exports.update_exam=async(req,res)=>{
       level:body.level,
       start_time:start_time,
       end_time:end_time,
-      showgrade:body.showgrade
   }
   Exam.findOneAndUpdate({_id:id,start_time: {  $gte: date }},updates).then(()=>{
     return res.json({
@@ -181,3 +180,26 @@ module.exports.update_exam=async(req,res)=>{
 }
 
 
+
+module.exports.update_exam_showgrade=async(req,res)=>{
+  try { 
+    if(!req.body.decoded.admin){
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+    }
+    const body=req.body
+    const id=new mongoose.Types.ObjectId(req.params.id)
+    var updates={
+      showgrade:body.showgrade,
+    }
+  Exam.findOneAndUpdate({_id:id},updates).then(()=>{
+    return res.json({
+      Success:true,
+      message:"Updated"
+})
+  })
+   
+  } catch (error) {
+    console.log(error.message)
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}
