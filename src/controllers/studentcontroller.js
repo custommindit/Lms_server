@@ -366,12 +366,13 @@ module.exports.getmyexamdata=async(req,res)=>{
     var list=[]
     console.log(date)
     for (var i = 0; i < exams.length; i++) {
-      if(exams[i].showgrade===true){
-      const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
+      var grade=null
+      if(exams[i].showgrade===true)
+      grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
       list.push({
         exam:exams[i],
         grade:grade,
-      })}
+      })
     }
     return res.json({
       Success:true,
