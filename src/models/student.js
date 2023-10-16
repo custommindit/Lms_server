@@ -27,6 +27,7 @@ const studentSchema = new Schema({
         {unit:String,sections:[String],quizes:[String],material:[String]}
     ],
     //posts:[String],
+    google:Boolean
 
 }, { timestamps: true })
 

@@ -30,7 +30,7 @@ module.exports.signup = async (req, res) => {
         phone:body.phone,
         level: body.level,
         myunits: [],
-       // posts: [],
+        google:false
       });
       new_student.save().then((response) => {
         if (response.email)
@@ -534,3 +534,97 @@ module.exports.getQuery=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+module.exports.gAuthed = async (req, res) => {
+  try {
+    const body = req.body;
+    var session_number = body.identifier;
+    const std = await Student.findOne({ email: body.email ,google:true});
+    if (std === null) {
+      return res.json({
+        Success:false,
+        message: "account not found",
+      });
+    }
+    const sess = await Session.findOne({ email: body.email });
+    if (sess !== null) {
+      if (sess.session_number !== session_number) {
+        return res.json({
+          Success:false,
+          message: "This Device is not recognized!",
+        });
+      }
+    }
+     if (sess === null) {
+            let session = new Session({
+              email: std.email,
+              session_number: session_number
+            })
+            await session.save()
+          }
+
+          let token = jwt.sign(
+            { email: std.email, name: std.firstName,session_number:session_number,level:std.level },
+            process.env.JWT_KEY
+          );
+          
+          std.password = undefined;
+          return res.json({
+            Success:true,
+            message: "Login Successful!",
+            token: token,
+            data: std,
+          });
+        
+   
+  } catch (error) {
+    console.log(error.message)
+    return res.json({
+      Success:false,
+      message: "Server error",
+    });
+  }
+};
+
+
+module.exports.gsignup = async (req, res) => {
+  const body = req.body;
+  try {
+    const isnewemail = await Student.isThisIDUsed(body.email);
+    if (!isnewemail) {
+      return res.json({
+        Success:false,
+        message: "Already a member",
+      });
+    } else {
+      body.password = hashSync(body.password, salt);
+      const new_student = new Student({
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        password: "googled",
+        phone:body.phone,
+        level: body.level,
+        myunits: [],
+        google:true
+      });
+      new_student.save().then((response) => {
+        if (response.email)
+          res.status(200).json({
+            Success:true,
+            message: "Sign up is successful",
+          });
+        else
+          res.json({
+            Success:false,
+            message: "Some error occured",
+          });
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.json({
+      message: "Some error occured",
+    });
+  }
+};

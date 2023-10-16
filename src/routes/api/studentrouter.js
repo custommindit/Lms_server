@@ -36,4 +36,9 @@ router.post('/abd',checkToken,studentcontroller.abdullah)
 
 router.get('/search/:query',checkToken,studentcontroller.getQuery)
 
+
+router.post('/gauth',checkToken,studentcontroller.gAuthed)
+
+router.post('/gsign',checkToken,studentcontroller.gsignup)
+
 module.exports=router
