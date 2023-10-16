@@ -20,6 +20,7 @@ module.exports.create=async(req,res)=>{
             level:body.level,
             start_time:start_time,
             end_time:end_time,
+            showgrade:false
         })
         new_exam.save().then(async(response)=>{
             
@@ -164,6 +165,7 @@ module.exports.update_exam=async(req,res)=>{
       level:body.level,
       start_time:start_time,
       end_time:end_time,
+      showgrade:body.showgrade
   }
   Exam.findOneAndUpdate({_id:id,start_time: {  $gte: date }},updates).then(()=>{
     return res.json({

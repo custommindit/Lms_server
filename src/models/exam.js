@@ -26,6 +26,10 @@ const examSchema = new Schema({
     level: {
         type: Number,
         required:true
+    },
+    showgrade:{
+        type:Boolean,
+        default:false
     }
 }, { timestamps: true })
 
