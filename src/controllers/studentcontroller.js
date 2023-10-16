@@ -597,7 +597,6 @@ module.exports.gsignup = async (req, res) => {
         message: "Already a member",
       });
     } else {
-      body.password = hashSync(body.password, salt);
       const new_student = new Student({
         email: body.email,
         firstName: body.firstName,
