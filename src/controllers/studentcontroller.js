@@ -627,3 +627,38 @@ module.exports.gsignup = async (req, res) => {
     });
   }
 };
+
+
+module.exports.getmyquizdatanew=async(req,res)=>{
+  try {
+    const myunits=await Student.findOne({email:req.body.decoded.email})
+    if(myunits.length<1){
+     return res.json({message:"no units bought",Success:false})}
+    else {
+     var list=[]
+    for (var i = 0; i < myunits.myunits.length; i++) {
+      const quizes=await get_quizes(myunits.myunits[i].unit)
+      const U=await Unit.findById(myunits.myunits[i].unit)
+      const completed=myunits.myunits[i].quizes
+      var grades=[]
+      if(completed.length>0)
+      for (var j = 0; j < completed.length; j++) {
+      const grade=await Grade.findOne({student_email:req.body.decoded.email,quiz_id:completed[j]})
+      grades.push(grade)
+    }
+      list.push({
+        quizes:quizes,
+        unit:U,
+        completed:completed,
+        grades:grades
+      })
+    }
+    return res.json({
+      Success:true,
+      data:list
+})}
+  } catch (error) {
+    console.log(error.message)
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+  }
+}

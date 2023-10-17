@@ -41,4 +41,6 @@ router.post('/gauth',studentcontroller.gAuthed)
 
 router.post('/gsign',studentcontroller.gsignup)
 
+router.post('/all_my_quizes_new',checkToken,studentcontroller.getmyquizdatanew)
+
 module.exports=router
