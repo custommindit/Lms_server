@@ -644,7 +644,7 @@ module.exports.getmyquizdatanew=async(req,res)=>{
       if(completed.length>0)
       for (var j = 0; j < completed.length; j++) {
       const grade=await Grade.findOne({student_email:req.body.decoded.email,quiz_id:completed[j]})
-      grades.push(grade)
+      grades.push(grade||{})
     }
       list.push({
         quizes:quizes,
