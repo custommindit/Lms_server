@@ -149,7 +149,7 @@ module.exports.delete = async (req, res) => {
 module.exports.get_std_number = async (req, res) => {
   try {
     const id = req.params.id;
-    let fakeexists = await FakeViews.findOne({ unit_id: response._id });
+    let fakeexists = await FakeViews.findOne({ unit_id: id});
     if (fakeexists !== null) {
       return res.json({
         Success: true,
