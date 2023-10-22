@@ -157,12 +157,12 @@ module.exports.get_std_number = async (req, res) => {
       });
     } else {
       const count = await buycount(id);
-      if (count) {
+      console.log(count)
         return res.json({
           Success: true,
           count: count,
         });
-      }
+        
     }
   } catch (error) {
     console.log(error.message);
