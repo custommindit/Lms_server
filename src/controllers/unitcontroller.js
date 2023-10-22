@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Unit = require("../models/unit");
+const FakeViews = require("../models/fakeviews");
 const {
   get_parts,
   buycount,
@@ -19,8 +20,15 @@ module.exports.create = async (req, res) => {
       image: req.file.path,
       elementcount: 0,
     });
-    new_unit.save().then((response) => {
+    new_unit.save().then(async (response) => {
       if (response) {
+        if (body.fakeviews) {
+          let newfake = new FakeViews({
+            unit_id: response._id,
+            fake_number: body.fakeviews,
+          });
+          await newfake.save();
+        }
         return res.json({
           message: `Unit ( ${response.name} ) Created`,
           Success: true,
@@ -141,13 +149,20 @@ module.exports.delete = async (req, res) => {
 module.exports.get_std_number = async (req, res) => {
   try {
     const id = req.params.id;
-
-    const count = await buycount(id);
-    if (count) {
+    let fakeexists = await FakeViews.findOne({ unit_id: response._id });
+    if (fakeexists !== null) {
       return res.json({
         Success: true,
-        count: count,
+        count: fakeexists.fake_number,
       });
+    } else {
+      const count = await buycount(id);
+      if (count) {
+        return res.json({
+          Success: true,
+          count: count,
+        });
+      }
     }
   } catch (error) {
     console.log(error.message);
@@ -179,19 +194,35 @@ module.exports.all_units_data=async(req,res)=>{
 
 module.exports.update = async (req, res) => {
   try {
-    if(!req.body.decoded.admin){
-        return res.json({})
+    if (!req.body.decoded.admin) {
+      return res.json({ Success: false, message: "Missing auth level 0" });
     }
-    let updated = {Success: false, message: "SOME ERROR OCCURED" };
+    let updated = { Success: false, message: "SOME ERROR OCCURED" };
     let body = req.body;
     if (req.file && req.file.path) updated.image = req.file.path;
 
     updated.name = body.name;
     updated.price = body.price;
     updated.level = body.level;
+
     Unit.findByIdAndUpdate(body._id, updated, { new: true }).then(
-      (response) => {
+      async (response) => {
         if (response) {
+          if (body.fakeviews) {
+            let fakeexists = await FakeViews.findOne({ unit_id: response._id });
+            if (fakeexists !== null) {
+              await FakeViews.updateOne(
+                { _id: fakeexists._id },
+                { fake_number: body.fakeviews }
+              );
+            } else {
+              let newfake = new FakeViews({
+                unit_id: response._id,
+                fake_number: body.fakeviews,
+              });
+              await newfake.save();
+            }
+          }
           return res.json({
             message: `Unit ( ${response.name} ) edited`,
             Success: true,
