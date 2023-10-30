@@ -3,6 +3,6 @@ const router= require("express").Router();
 const{checkToken}=require('../../auth/token_validation')
 
 router.post('/',logincontroller.login)
-router.get('/',checkToken,logincontroller.signup)
+router.get('/',checkToken,logincontroller.data)
 
 module.exports=router
