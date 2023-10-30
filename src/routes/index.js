@@ -10,6 +10,7 @@ const postrouter = require('./api/postrouter')
 const adminpostrouter = require('./api/adminpostrouter')
 const announcementrouter = require('./api/announcementrouter')
 const systemrouter = require('./api/systemrouter')
+const loginrouter = require('./api/loginrouter')
 
 
 router.use('/student', studentrouter)
@@ -33,5 +34,7 @@ router.use('/adminpost', adminpostrouter)
 router.use('/announcement', announcementrouter)
 
 router.use('/system', systemrouter)
+
+router.use('/login', loginrouter)
 
 module.exports = router

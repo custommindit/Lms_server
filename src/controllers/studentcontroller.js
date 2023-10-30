@@ -369,7 +369,7 @@ module.exports.getmyexamdata=async(req,res)=>{
       const grade=await Examgrade.findOne({student_email:req.body.decoded.email,exam_id:exams[i]._id})
       list.push({
         exam:exams[i],
-        grade:grade,
+        grade:exams[i].showgrade?grade:null,
         showgrade:exams[i].showgrade
       })
     }
