@@ -30,7 +30,7 @@ module.exports.login = async (req, res) => {
       }
     }
     else{
-      user=Admin.findOne({email:body.email})
+      user=await Admin.findOne({email:body.email})
     }
     bcrypt.compare(body.password, user.password, async function (err, result) {
       if (err) {
@@ -80,10 +80,10 @@ module.exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res.json({
       Success: false,
-      message: "Server error",
+      message: "Server erro",
     });
   }
 };
