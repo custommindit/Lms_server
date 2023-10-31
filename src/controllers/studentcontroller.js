@@ -13,8 +13,8 @@ require("dotenv").config();
 module.exports.signup = async (req, res) => {
   const body = req.body;
   try {
-    const isnewemail = await Student.isThisIDUsed(body.email);
-    if (!isnewemail) {
+    const notnewemail = await Student.isThisIDUsed(body.email);
+    if (notnewemail) {
       return res.json({
         Success:false,
         message: "Already a member",
@@ -590,8 +590,8 @@ module.exports.gAuthed = async (req, res) => {
 module.exports.gsignup = async (req, res) => {
   const body = req.body;
   try {
-    const isnewemail = await Student.isThisIDUsed(body.email);
-    if (!isnewemail) {
+    const notnewemail = await Student.isThisIDUsed(body.email);
+    if (notnewemail) {
       return res.json({
         Success:false,
         message: "Already a member",

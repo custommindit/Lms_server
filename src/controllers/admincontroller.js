@@ -7,8 +7,8 @@ require("dotenv").config();
 module.exports.signup = async (req, res) => {
   const body = req.body;
   try {
-    const isnewemail = await Admin.isThisIDUsed(body.email);
-    if (!isnewemail) {
+    const notnewemail = await Admin.isThisIDUsed(body.email);
+    if (notnewemail) {
       return res.json({
         Success:false,
         message: "Already a member",

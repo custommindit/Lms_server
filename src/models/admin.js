@@ -26,11 +26,11 @@ adminSchema.statics.isThisIDUsed = async function (email) {
     if(!email) throw new Error('Invalid email')
     try{
         const admin = await this.findOne({email})
-        if(admin) return false
-        return true
+        if(admin) return true
+        return false
     }catch (error){
         console.log('error inside isThisEmailUse method ', error.message)
-        return false
+        return true
     }
 }
 

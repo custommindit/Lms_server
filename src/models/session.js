@@ -10,11 +10,11 @@ sessionSchema.statics.isThisIDUsed = async function (email) {
     if (!email) throw new Error('Invalid id')
     try {
         const student = await this.findOne({ email: email })
-        if (student) return false
-        return true
+        if (student) return true
+        return false
     } catch (error) {
         console.log('error establishing history', error.message)
-        return false
+        return true
     }
 }
 const session = mongoose.model('session', sessionSchema)
