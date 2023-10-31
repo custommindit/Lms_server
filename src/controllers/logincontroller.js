@@ -7,8 +7,8 @@ require("dotenv").config();
 module.exports.login = async (req, res) => {
   try {
     const body = req.body;
-    const studentexists = await Student.isThisIDUsed({ email: body.email });
-    const adminexists = await Admin.isThisIDUsed({ email: body.email });
+    const studentexists = await Student.isThisIDUsed(body.email );
+    const adminexists = await Admin.isThisIDUsed( body.email );
     if (!(studentexists || adminexists)) {
       return res.json({
         Success: false,
