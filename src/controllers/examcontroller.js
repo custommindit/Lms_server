@@ -98,7 +98,7 @@ module.exports.finish = async (req, res) => {
             choices:body.choices,
             grade:count
         })
-        new_grade.save()
+        await new_grade.save()
           .then((response) => {
             return res.json({ Success: true, message: "Exam graded ",response });
           })
