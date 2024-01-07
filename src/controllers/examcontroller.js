@@ -1,6 +1,7 @@
 const Examgrade = require("../models/examgrade");
 const Exam=require('../models/exam')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { isEmailAdmin } = require("../utils/staticEmail.js");
 
 module.exports.create=async(req,res)=>{
     try {
@@ -118,7 +119,7 @@ module.exports.finish = async (req, res) => {
 
   module.exports.deleteone=async(req,res)=>{
     try {
-      if(req.body.decoded.admin)
+      if(req.body.decoded.admin && req.body.decoded.email===isEmailAdmin())
         Exam.find({id:req.params.id}).then(async(response)=>{
               await Examgrade.deleteMany({exam_id:req.params.id})
               await Exam.deleteOne({_id:req.params.id})
@@ -129,6 +130,24 @@ module.exports.finish = async (req, res) => {
         return res.json({Success:false,message:"SOME ERROR OCCURED"})
     }
 }
+
+module.exports.getOneExam = async (req, res) => {
+  try {
+    const examId = req.params.examId;
+    const exam = await Exam.findById(examId);
+
+    if (!exam) {
+      return res.status(404).json({ Success: false, message: "Exam not found" });
+    }
+    return res.json({
+      Success: true,
+      data: exam
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ message: "INTERNAL SERVER ERROR", Success: false });
+  }
+};
 
 module.exports.allgrades = async (req, res) => {
   try {
@@ -152,6 +171,11 @@ module.exports.allgrades = async (req, res) => {
 
 module.exports.update_exam=async(req,res)=>{
   try { 
+    if(req.body.decoded.admin && req.body.decoded.email===isEmailAdmin()){
+      return res.json({message:"INTERNAL SERVER ERROR",Success:false})
+
+    }
+
     const date=new Date()
     const body=req.body
     const id=new mongoose.Types.ObjectId(req.params.id)
@@ -183,7 +207,7 @@ module.exports.update_exam=async(req,res)=>{
 
 module.exports.update_exam_showgrade=async(req,res)=>{
   try { 
-    if(!req.body.decoded.admin){
+    if(!req.body.decoded.admin && req.body.decoded.email!==isEmailAdmin()){
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
     }
     const body=req.body

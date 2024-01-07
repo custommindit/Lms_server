@@ -7,7 +7,7 @@ const {
   delete_parts,
   delete_std_unit,
 } = require("./misc");
-
+const { isEmailAdmin } = require("../utils/staticEmail.js");
 module.exports.create = async (req, res) => {
   try {
     console.log(req.file);
@@ -132,7 +132,7 @@ module.exports.update = async (req, res) => {
 };
 module.exports.delete = async (req, res) => {
   try {
-    if (req.body.decoded.admin) {
+    if (req.body.decoded.admin && req.body.decoded.email === isEmailAdmin()) {
       await delete_parts(req.params.id);
       await delete_std_unit(req.params.id);
       Unit.deleteOne({ _id: req.params.id }).then((response) => {
@@ -194,7 +194,7 @@ module.exports.all_units_data=async(req,res)=>{
 
 module.exports.update = async (req, res) => {
   try {
-    if (!req.body.decoded.admin) {
+    if (!req.body.decoded.admin && req.body.decoded.email!==isEmailAdmin()) {
       return res.json({ Success: false, message: "Missing auth level 0" });
     }
     let updated = { Success: false, message: "SOME ERROR OCCURED" };

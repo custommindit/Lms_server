@@ -8,12 +8,13 @@ const Section = require("../models/section");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
 const Unit = require("../models/unit");
+const { isEmailAdmin } = require("../utils/staticEmail.js");
 
 module.exports.create = async (req, res) => {
   try {
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (unite === null || !req.body.decoded.admin) {
+    if (unite === null || !req.body.decoded.admin || req.body.decoded.email!==isEmailAdmin()) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
     const new_section = new Section({
@@ -84,7 +85,7 @@ module.exports.updateone = async (req, res) => {
 
 module.exports.deleteone = async (req, res) => {
   try {
-    if (!req.body.decoded.admin) {
+    if (!req.body.decoded.admin && req.body.decoded.email!==isEmailAdmin()) {
       return res.json({ Success: true, message: "INVALID auth" });
     } else {
       let id = req.params.id;
@@ -115,7 +116,7 @@ module.exports.createwithupload = async (req, res) => {
   try {
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (unite === null || !req.body.decoded.admin) {
+    if (unite === null || !req.body.decoded.admin ||req.body.decoded.email!==isEmailAdmin()) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
     if (req.file.path === undefined) {

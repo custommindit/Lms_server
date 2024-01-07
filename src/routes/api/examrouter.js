@@ -9,6 +9,7 @@ router.get('/level/:level',examcontroller.by_level)
 
 router.post('/finish',checkToken ,examcontroller.finish)
 router.delete('/:id',checkToken ,examcontroller.deleteone)
+router.get('/getexam/:examId',checkToken ,examcontroller.getOneExam)
 
 router.get('/grades/:id',checkToken,examcontroller.allgrades)
 

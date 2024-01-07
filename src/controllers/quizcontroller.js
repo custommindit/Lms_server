@@ -2,6 +2,7 @@ const { section_exists, add_time,removequizSTD} = require("./misc");
 const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
 const { response } = require("express");
+const { isEmailAdmin } = require("../utils/staticEmail.js");
 
 module.exports.create = async (req, res) => {
   try {
@@ -158,7 +159,7 @@ module.exports.allgrades = async (req, res) => {
 module.exports.deleteone = async (req, res) => {
   try {
     let id = req.params.id;
-    if(req.body.decoded.admin)
+    if(req.body.decoded.admin && req.body.decoded.email === isEmailAdmin())
     Quiz.findById(id).then(async(response) => {
         await removequizSTD(id)
         await add_time(response.unit,0-response.time)
@@ -178,7 +179,7 @@ module.exports.deleteone = async (req, res) => {
 module.exports.update = async (req, res) => {
   try {
     let id =req.params.id
-    if(req.body.decoded.admin)
+    if(req.body.decoded.admin && req.body.decoded.email === isEmailAdmin())
     Quiz.findByIdAndUpdate(id,{questions:req.body.questions,answers:req.body.answers}).then((response) => {
       return  res.json({ Success: true, message: "Quiz updated" });
     });

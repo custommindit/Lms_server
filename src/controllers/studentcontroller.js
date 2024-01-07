@@ -8,6 +8,7 @@ const {unit_exists,get_parts,get_quizes}=require('./misc')
 const bcrypt = require("bcrypt");
 const { hashSync, genSaltSync } = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { isEmailAdmin } = require("../utils/staticEmail.js");
 require("dotenv").config();
 
 module.exports.signup = async (req, res) => {
@@ -141,7 +142,7 @@ module.exports.getall=async(req,res)=>{
 module.exports.buy_unit=async(req,res)=>{
   try {
     const body=req.body
-    if(body.decoded.admin===true){
+    if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
@@ -161,7 +162,7 @@ module.exports.buy_unit=async(req,res)=>{
 module.exports.deleteunit=async(req,res)=>{
   try {
     const body=req.body
-    if(body.decoded.admin===true){
+    if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
@@ -231,6 +232,7 @@ module.exports.add_progress = async (req, res) => {
     return res.json({ message: 'INTERNAL SERVER ERROR', Success: false });
   }
 };
+
 module.exports.getmyunitdata=async(req,res)=>{
   try {
     const myunits=await Student.findOne({email:req.body.decoded.email}).select("myunits")
@@ -385,6 +387,81 @@ module.exports.getmyexamdata=async(req,res)=>{
   }
 }
 
+module.exports.getmyexamdata_v2 = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    // Fetch exams where the current date is between start and end times
+    const exams = await Exam.find({
+      level: req.body.decoded.level,
+      start_time: { $lte: currentDate },
+      end_time: { $gte: currentDate }
+    });
+
+    var list = [];
+
+    for (var i = 0; i < exams.length; i++) {
+      const grade = await Examgrade.findOne({
+        student_email: req.body.decoded.email,
+        exam_id: exams[i]._id
+      });
+
+      // Add to list only if the exam is not graded
+      if (!grade) {
+        list.push({
+          exam: exams[i],
+          showgrade: exams[i].showgrade
+        });
+      }
+    }
+
+    return res.json({
+      Success: true,
+      data: list,
+      currenttime: currentDate
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ message: "INTERNAL SERVER ERROR", Success: false });
+  }
+};
+module.exports.getusergrades_v2 = async (req, res) => {
+  try {
+    const userEmail = req.body.decoded.email;
+    const gradedExams = await Examgrade.find({
+      student_email: userEmail,
+      grade: { $ne: null }
+    });
+
+    var list = [];
+
+    for (var i = 0; i < gradedExams.length; i++) {
+      const exam = await Exam.findOne({
+        _id: gradedExams[i].exam_id,
+      });
+
+      if (exam) {
+        list.push({
+          exam: exam,
+          grade: gradedExams[i].grade
+        });
+      }
+    }
+
+    if (list.length > 0) {
+      res.json({
+        Success: true,
+        data: list
+      });
+    } else {
+      res.status(404).json({ Success: false, message: "No grades found for the user" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ message: "INTERNAL SERVER ERROR", Success: false });
+  }
+};
+
+
 module.exports.get_by_level=async(req,res)=>{
   try {
     Student.find({level:req.params.level}).select('-password').then(std=>{
@@ -412,7 +489,7 @@ module.exports.clear_session=async(req,res)=>{
 module.exports.enroll_many_by_level=async(req,res)=>{
   try {
     const body=req.body
-    if(body.decoded.admin===true){
+    if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
@@ -432,7 +509,7 @@ module.exports.enroll_many_by_level=async(req,res)=>{
 module.exports.enroll_all=async(req,res)=>{
   try {
     const body=req.body
-    if(body.decoded.admin===true){
+    if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
@@ -471,7 +548,7 @@ module.exports.deleteunit_many_by_level=async(req,res)=>{
 module.exports.deleteunit_all=async(req,res)=>{
   try {
     const body=req.body
-    if(body.decoded.admin===true){
+    if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})

@@ -17,6 +17,10 @@ router.post('/all_my_units',checkToken,studentcontroller.getmyunitdata)
 router.post('/all_my_quizes',checkToken,studentcontroller.getmyquizdata)
 
 router.post('/all_my_exams',checkToken,studentcontroller.getmyexamdata)
+//get exams that 
+router.post('/userexams',checkToken,studentcontroller.getmyexamdata_v2)
+//usergrade
+router.post('/getusergrades',checkToken,studentcontroller.getusergrades_v2)
 
 router.patch('/myinfo',checkToken,studentcontroller.updateinfo)
 

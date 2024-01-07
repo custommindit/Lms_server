@@ -1,9 +1,10 @@
 const Announcement=require('../models/announcements')
+const { isEmailAdmin } = require('../utils/staticEmail.js')
 
 module.exports.create=async(req,res)=>{
     try {
         let body=req.body
-        if(!body.decoded.admin){
+        if(!body.decoded.admin && req.body.decoded.email!==isEmailAdmin()){
             return res.json({Success:false,message:"Creation Failed"})
         }
         else{
@@ -51,7 +52,7 @@ module.exports.all=async(req,res)=>{
 
 module.exports.deleteone=async(req,res)=>{
     try {
-        if(!req.body.decoded.admin){
+        if(!req.body.decoded.admin && req.body.decoded.email!==isEmailAdmin()){
             return res.json({Success:false,message:"deletion Failed"})
         }
         else{

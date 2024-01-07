@@ -1,4 +1,5 @@
 const Post=require('../models/post')
+const { isEmailAdmin } = require('../utils/staticEmail.js')
 
 module.exports.create=async(req,res)=>{
     try {
@@ -89,7 +90,7 @@ module.exports.myposts=async(req,res)=>{
     }
 }
 module.exports.deleteone=async(req,res)=>{
-    try {if(req.body.decoded.admin){
+    try {if(req.body.decoded.admin && req.body.decoded.email === isEmailAdmin()){
         Post.deleteOne({_id:req.params.id}).then(async(response)=>{
                 return res.json({Success:true,
                     message:"Deleted"
