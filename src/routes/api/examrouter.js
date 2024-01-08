@@ -12,7 +12,6 @@ router.delete('/:id',checkToken ,examcontroller.deleteone)
 router.get('/getexam/:examId',checkToken ,examcontroller.getOneExam)
 
 router.get('/grades/:id',checkToken,examcontroller.allgrades)
-
 router.put('/:id',checkToken ,examcontroller.update_exam)
 router.patch('/:id',checkToken ,examcontroller.update_exam_showgrade)
 

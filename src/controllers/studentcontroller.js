@@ -442,7 +442,8 @@ module.exports.getusergrades_v2 = async (req, res) => {
       if (exam) {
         list.push({
           exam: exam,
-          grade: gradedExams[i].grade
+          grade: gradedExams[i].grade,
+          choices:gradedExams[i].choices
         });
       }
     }
