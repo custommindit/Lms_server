@@ -1,6 +1,7 @@
 const studentcontroller=require('../../controllers/studentcontroller')
 const router= require("express").Router();
-const{checkToken}=require('../../auth/token_validation')
+const{checkToken}=require('../../auth/token_validation');
+const verifyAdminSecret = require('../../auth/verifyAdminSecret.js');
 
 router.post('/sign_up',studentcontroller.signup)
 router.post('/login',studentcontroller.login)
@@ -27,13 +28,13 @@ router.patch('/myinfo',checkToken,studentcontroller.updateinfo)
 router.patch('/updatepassword',checkToken,studentcontroller.updatepassword)
 router.delete('/deleteme',checkToken,studentcontroller.deleteme)
 
-router.delete('/clearsession/:email',checkToken,studentcontroller.clear_session)
+router.delete('/clearsession/:email',verifyAdminSecret ,checkToken,studentcontroller.clear_session)
 
-router.post('/enrollmany',checkToken,studentcontroller.enroll_many_by_level)
-router.post('/enrollall',checkToken,studentcontroller.enroll_all)
-router.post('/unenrollall',checkToken,studentcontroller.deleteunit_all)
+router.post('/enrollmany',verifyAdminSecret ,checkToken,studentcontroller.enroll_many_by_level)
+router.post('/enrollall',verifyAdminSecret ,checkToken,studentcontroller.enroll_all)
+router.post('/unenrollall',verifyAdminSecret ,checkToken,studentcontroller.deleteunit_all)
 
-router.delete('/clearallsession',checkToken,studentcontroller.clear_all_session)
+router.delete('/clearallsession',verifyAdminSecret ,checkToken,studentcontroller.clear_all_session)
 
 
 router.post('/abd',checkToken,studentcontroller.abdullah)
