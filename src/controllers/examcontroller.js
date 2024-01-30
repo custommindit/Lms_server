@@ -171,7 +171,7 @@ module.exports.allgrades = async (req, res) => {
 
 module.exports.update_exam=async(req,res)=>{
   try { 
-    if(req.body.decoded.admin && req.body.decoded.email===isEmailAdmin()){
+    if(!req.body.decoded.admin ){
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
 
     }
