@@ -142,7 +142,7 @@ module.exports.getall=async(req,res)=>{
 module.exports.buy_unit=async(req,res)=>{
   try {
     const body=req.body
-    if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
+    //if(body.decoded.admin===true && req.body.decoded.email === isEmailAdmin()){
       const unite=await unit_exists(body.unit)
         if(unite===null){
             return res.json({Success:false,message:"Unit doesn't exist"})
@@ -150,10 +150,11 @@ module.exports.buy_unit=async(req,res)=>{
     Student.findOneAndUpdate({email:body.email},{ $push: { myunits: {unit:unite._id,
       sections:[],quizes:[],material:[]} } },{new:true}).then(std=>{
       return res.json({data:std,Success:true,message:"enrolled sucessfully"})
-    })}
-    else{
-      return res.json({message:"Auth Failed",Success:false})
-    }
+    })
+    // }
+    // else{
+    //   return res.json({message:"Auth Failed",Success:false})
+    // }
   } catch (error) {
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
