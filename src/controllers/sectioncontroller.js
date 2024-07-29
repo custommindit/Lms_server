@@ -63,7 +63,7 @@ module.exports.updateone = async (req, res) => {
         time:req.body.time
       };
     if(req.file!==undefined){
-        toupdate.video="http://5.183.9.124:8753/" + req.file.path
+        toupdate.video="http://77.37.51.112:8753/" + req.file.path
     }
     Section.findByIdAndUpdate(id, 
         toupdate
@@ -126,7 +126,7 @@ module.exports.createwithupload = async (req, res) => {
       name: body.name,
       description: body.description,
       time: body.time,
-      video: "http://5.183.9.124:8753/" + req.file.path,
+      video: "http://77.37.51.112:8753/" + req.file.path,
       unit: body.unit,
       level: unite.level,
     });
