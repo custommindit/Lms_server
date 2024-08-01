@@ -15,10 +15,13 @@ const corsOptions = {
     optionSuccessStatus: 200,
   };
   app.use(cors(corsOptions));
-  app.use(express.json({ limit: "300mb" }));
+  app.use(express.json({ limit: "50mb" }));
   app.use(router)
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+  app.options('*', (req, res) => {
+    res.sendStatus(200);
+  });
   const connectDB = async () => {
     try {
       const conn = await mongoose.connect(process.env.MONGO_URL);

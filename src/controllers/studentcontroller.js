@@ -269,28 +269,40 @@ module.exports.getmyunitdata_V2 = async (req, res) => {
     const studentEmail = req?.body?.decoded?.email;
 
     const query = userId ? { _id: userId } : { email: studentEmail };
-    const myunits = await Student.findOne(query).select("myunits");
+    const student = await Student.findOne(query).select("myunits");
 
-    if (!myunits || myunits.myunits.length < 1) {
+    if (!student || student.myunits.length < 1) {
       return res.json({ message: "no units bought", Success: false });
     } else {
       var list = [];
-      for (var i = 0; i < myunits.myunits.length; i++) {
-        const [quizes, sections, material] = await get_parts(myunits.myunits[i].unit);
-        const U = await Unit.findById(myunits.myunits[i].unit);
-        const done = myunits.myunits[i].sections.length + myunits.myunits[i].quizes.length + myunits.myunits[i].material.length;
+      for (var i = 0; i < student.myunits.length; i++) {
+        const myunit = student.myunits[i];
+        const [quizes, sections, material] = await get_parts(myunit.unit);
+        const U = await Unit.findById(myunit.unit);
+        const done = myunit.sections.length + myunit.quizes.length + myunit.material.length;
 
-          console.log(sections.length,myunits.myunits[i].sections.length)
         // Mark sections as done or not done
         const sectionStatus = sections.map(section => ({
           ...section._doc,
-          is_done: myunits.myunits[i].sections.includes(section._id.toString())
+          is_done: myunit.sections.includes(section._id.toString())
+        }));
+
+        // Mark quizzes as done or not done
+        const quizStatus = quizes.map(quiz => ({
+          ...quiz._doc,
+          is_done: myunit.quizes.includes(quiz._id.toString())
+        }));
+
+        // Mark materials as done or not done
+        const materialStatus = material.map(materialItem => ({
+          ...materialItem._doc,
+          is_done: myunit.material.includes(materialItem._id.toString())
         }));
 
         list.push({
-          quizes: quizes,
+          quizes: quizStatus,
           sections: sectionStatus,
-          material: material,
+          material: materialStatus,
           unit: U,
           done: done
         });
