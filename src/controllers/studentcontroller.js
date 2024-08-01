@@ -261,6 +261,50 @@ module.exports.getmyunitdata=async(req,res)=>{
       return res.json({message:"INTERNAL SERVER ERROR",Success:false})
   }
 }
+
+
+module.exports.getmyunitdata_V2 = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const studentEmail = req?.body?.decoded?.email;
+
+    const query = userId ? { _id: userId } : { email: studentEmail };
+    const myunits = await Student.findOne(query).select("myunits");
+
+    if (!myunits || myunits.myunits.length < 1) {
+      return res.json({ message: "no units bought", Success: false });
+    } else {
+      var list = [];
+      for (var i = 0; i < myunits.myunits.length; i++) {
+        const [quizes, sections, material] = await get_parts(myunits.myunits[i].unit);
+        const U = await Unit.findById(myunits.myunits[i].unit);
+        const done = myunits.myunits[i].sections.length + myunits.myunits[i].quizes.length + myunits.myunits[i].material.length;
+
+          console.log(sections.length,myunits.myunits[i].sections.length)
+        // Mark sections as done or not done
+        const sectionStatus = sections.map(section => ({
+          ...section._doc,
+          is_done: myunits.myunits[i].sections.includes(section._id.toString())
+        }));
+
+        list.push({
+          quizes: quizes,
+          sections: sectionStatus,
+          material: material,
+          unit: U,
+          done: done
+        });
+      }
+      return res.json({
+        Success: true,
+        data: list
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ message: "INTERNAL SERVER ERROR", Success: false });
+  }
+};
 module.exports.getmyquizdata=async(req,res)=>{
   try {
     const myunits=await Student.findOne({email:req.body.decoded.email})

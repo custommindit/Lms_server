@@ -16,6 +16,9 @@ router.post('/progress',checkToken,studentcontroller.add_progress)
 
 router.post('/all_my_units',checkToken,studentcontroller.getmyunitdata)
 
+router.post('/all_my_units_v2',checkToken,studentcontroller.getmyunitdata_V2)
+
+
 router.post('/all_my_quizes',checkToken,studentcontroller.getmyquizdata)
 
 router.post('/all_my_exams',checkToken,studentcontroller.getmyexamdata)
