@@ -5,6 +5,7 @@ const path=require('path')
 const mongoose = require("mongoose");
 const router = require("./src/routes/index");
 const cors = require("cors");
+const http = require("http");
 require('dotenv').config();
 
 app.use(express.json());
@@ -33,9 +34,12 @@ const corsOptions = {
   };
 
 
-  
+const server = http.createServer(app);
+
+server.setTimeout(10 * 60 * 1000);
+
 connectDB().then(() => {
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`server is starting at port ${port}`);
     });
   });
