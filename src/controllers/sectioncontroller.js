@@ -14,7 +14,7 @@ module.exports.create = async (req, res) => {
   try {
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (unite === null || !req.body.decoded.admin || req.body.decoded.email!==isEmailAdmin()) {
+    if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
     const new_section = new Section({
@@ -30,13 +30,16 @@ module.exports.create = async (req, res) => {
         await add_time(body.unit, response.time);
         return res.json({
           Success: true,
-          message: `Section ( ${response.name} ) Created`,
+          message: `Section (${response.name}) Created`,
           data: response,
         });
       }
+    }).catch((saveError) => {
+      console.error('Error saving section:', saveError.message);
+      res.status(500).json({ Success: false, message: "Failed to save section" });
     });
   } catch (error) {
-    console.log(error.message);
+    console.error('Unexpected error in create:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -46,9 +49,12 @@ module.exports.getone = async (req, res) => {
     let id = req.params.id;
     Section.findById(id).then((response) => {
       return res.json({ Success: true, data: response });
+    }).catch((findError) => {
+      console.error('Error finding section:', findError.message);
+      res.status(500).json({ Success: false, message: "Failed to find section" });
     });
   } catch (error) {
-    console.log(error.message);
+    console.error('Unexpected error in getone:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -56,37 +62,39 @@ module.exports.getone = async (req, res) => {
 module.exports.updateone = async (req, res) => {
   try {
     let id = req.params.id;
-    const current = await Section.findOne({_id:id})
+    const current = await Section.findOne({ _id: id });
     var toupdate = {
-        description: req.body.description,
-        name: req.body.name,
-        time:req.body.time
-      };
-    if(req.file!==undefined){
-        toupdate.video="http://77.37.51.112:8753/" + req.file.path
+      description: req.body.description,
+      name: req.body.name,
+      time: req.body.time
+    };
+    if (req.file !== undefined) {
+      toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
     }
-    Section.findByIdAndUpdate(id, 
-        toupdate
-    ).then(async (response) => {
-      await Quiz.updateMany(
-        { section: req.params.id },
-        { name: req.body.name }
-      );
-      await Unit.updateOne({_id:current.unit},{$inc:{totaltime:toupdate.time-current.time}})
-      console.log()
-      await Quiz.updateMany({section:current._id},{name:req.body.name})
-      return res.json({ Success: true, message: "Updated" });
-    });
+    Section.findByIdAndUpdate(id, toupdate)
+      .then(async (response) => {
+        await Quiz.updateMany(
+          { section: req.params.id },
+          { name: req.body.name }
+        );
+        await Unit.updateOne({ _id: current.unit }, { $inc: { totaltime: toupdate.time - current.time } });
+        await Quiz.updateMany({ section: current._id }, { name: req.body.name });
+        return res.json({ Success: true, message: "Updated" });
+      })
+      .catch((updateError) => {
+        console.error('Error updating section:', updateError.message);
+        res.status(500).json({ Success: false, message: "Failed to update section" });
+      });
   } catch (error) {
-    console.log(error.message);
+    console.error('Unexpected error in updateone:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
 
 module.exports.deleteone = async (req, res) => {
   try {
-    if (!req.body.decoded.admin && req.body.decoded.email!==isEmailAdmin()) {
-      return res.json({ Success: true, message: "INVALID auth" });
+    if (!req.body.decoded.admin && req.body.decoded.email !== isEmailAdmin()) {
+      return res.json({ Success: false, message: "INVALID auth" });
     } else {
       let id = req.params.id;
       const deleted = await Section.findById(id);
@@ -103,11 +111,11 @@ module.exports.deleteone = async (req, res) => {
       await Section.deleteOne({ _id: deleted._id });
       return res.json({
         Success: true,
-        message: "Section and its linked quizes deleted",
+        message: "Section and its linked quizzes deleted",
       });
     }
   } catch (error) {
-    console.log(error.message);
+    console.error('Unexpected error in deleteone:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -117,20 +125,13 @@ module.exports.createwithupload = async (req, res) => {
     console.log('Upload started at', new Date());
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (unite === null || !req.body.decoded.admin ||req.body.decoded.email!==isEmailAdmin()) {
+    if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
-    if (req.file.path === undefined) {
-      return res.json({ Success: false, message: "invalid video" });
+    if (req.file === undefined) {
+      return res.json({ Success: false, message: "No video uploaded" });
     }
-    if (req.file) {
-        console.log('Uploaded file size:', req.file.size);
-        res.send('File uploaded successfully');
-    } else {
-        console.log('No file uploaded');
-        res.send('No file uploaded');
-    }
-    console.log('Upload ended at', new Date());
+    console.log('Uploaded file size:', req.file.size);
     const new_section = new Section({
       name: body.name,
       description: body.description,
@@ -154,7 +155,7 @@ module.exports.createwithupload = async (req, res) => {
       return res.json({ Success: false, message: "Failed to save section" });
     }
   } catch (error) {
-    console.log(error.message);
+    console.error('Unexpected error in createwithupload:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
