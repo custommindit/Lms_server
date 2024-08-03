@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const router = require("./src/routes/index");
 const cors = require("cors");
 const http = require("http");
+const multer = require('multer');
 require('dotenv').config();
 
 app.use(express.json());
@@ -16,7 +17,7 @@ const corsOptions = {
     optionSuccessStatus: 200,
   };
   app.use(cors(corsOptions));
-  app.use(express.json({ limit: "300mb" }));
+  app.use(express.json({ limit: "600mb" }));
   app.use(router)
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
