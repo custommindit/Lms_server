@@ -38,7 +38,7 @@ const corsOptions = {
 
 const server = http.createServer(app);
 
-server.setTimeout(10 * 60 * 1000);
+server.setTimeout(20 * 60 * 1000);
 
 connectDB().then(() => {
     server.listen(port, () => {
