@@ -114,6 +114,7 @@ module.exports.deleteone = async (req, res) => {
 
 module.exports.createwithupload = async (req, res) => {
   try {
+    console.log('Upload started at', new Date());
     let body = req.body;
     const unite = await unit_exists(body.unit);
     if (unite === null || !req.body.decoded.admin ||req.body.decoded.email!==isEmailAdmin()) {
@@ -122,6 +123,14 @@ module.exports.createwithupload = async (req, res) => {
     if (req.file.path === undefined) {
       return res.json({ Success: false, message: "invalid video" });
     }
+    f (req.file) {
+        console.log('Uploaded file size:', req.file.size);
+        res.send('File uploaded successfully');
+    } else {
+        console.log('No file uploaded');
+        res.send('No file uploaded');
+    }
+    console.log('Upload ended at', new Date());
     const new_section = new Section({
       name: body.name,
       description: body.description,
