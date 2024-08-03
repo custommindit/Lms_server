@@ -7,7 +7,7 @@ const router = require("./src/routes/index");
 const cors = require("cors");
 const http = require("http");
 const multer = require('multer');
-const timeout = require('connect-timeout');
+
 
 require('dotenv').config();
 
@@ -22,14 +22,10 @@ const corsOptions = {
   app.use(express.json({ limit: "600mb" }));
   app.use(router)
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-  app.use(timeout('10m')); // 10 minutes
-  app.use(haltOnTimedout);
+  
   app.options('*', (req, res) => {
     res.sendStatus(200);
   });
-  function haltOnTimedout(req, res, next) {
-    if (!req.timedout) next();
-  }
   const connectDB = async () => {
     try {
       const conn = await mongoose.connect(process.env.MONGO_URL);
