@@ -123,7 +123,7 @@ module.exports.createwithupload = async (req, res) => {
     if (req.file.path === undefined) {
       return res.json({ Success: false, message: "invalid video" });
     }
-    f (req.file) {
+    if (req.file) {
         console.log('Uploaded file size:', req.file.size);
         res.send('File uploaded successfully');
     } else {
