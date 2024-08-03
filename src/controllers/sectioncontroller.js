@@ -130,16 +130,20 @@ module.exports.createwithupload = async (req, res) => {
       unit: body.unit,
       level: unite.level,
     });
-    new_section.save().then(async (response) => {
+    try {
+      const response = await new_section.save();
       if (response) {
         await add_time(body.unit, response.time);
         return res.json({
           Success: true,
-          message: `Section ( ${response.name} ) Created`,
+          message: `Section (${response.name}) Created`,
           data: response,
         });
       }
-    });
+    } catch (saveError) {
+      console.error('Error saving section:', saveError.message);
+      return res.json({ Success: false, message: "Failed to save section" });
+    }
   } catch (error) {
     console.log(error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
