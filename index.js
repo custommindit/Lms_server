@@ -7,7 +7,6 @@ const router = require("./src/routes/index");
 const cors = require("cors");
 const http = require("http");
 const multer = require('multer');
-const { upload } = require("./uploader");
 require('dotenv').config();
 
 app.use(express.json());
@@ -25,17 +24,7 @@ const corsOptions = {
   app.options('*', (req, res) => {
     res.sendStatus(200);
   });
-app.post('/upload', upload.single('file'), (req, res) => {
-    console.log('Upload started at', new Date());
-    // Log the size of the uploaded file
-    if (req.file) {
-        console.log('Uploaded file size:', req.file.size);
-    } else {
-        console.log('No file uploaded');
-    }
-    res.send('File uploaded successfully');
-    console.log('Upload ended at', new Date());
-});
+
   const connectDB = async () => {
     try {
       const conn = await mongoose.connect(process.env.MONGO_URL);
