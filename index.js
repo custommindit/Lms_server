@@ -48,17 +48,44 @@ app.get('/video/:fileId', async (req, res) => {
   try {
     const drive = google.drive({ version: 'v3', auth });
     const { fileId } = req.params;
+    const clientRange = req.headers.range;
 
-    const { data } = await drive.files.get({
+    const driveOptions = {
       fileId,
-      alt: 'media'
-    }, { responseType: 'stream' });
+      alt: 'media',
+    };
 
-    res.setHeader('Content-Type', 'video/mp4');
-    data.pipe(res);
+    const headers = clientRange ? { Range: clientRange } : undefined;
 
-  } catch (error) {
-    console.error('Error:', error.message);
+    const driveRes = await drive.files.get(driveOptions, {
+      responseType: 'stream',
+      headers,
+    });
+
+    const contentLength = driveRes.headers.get('content-length');
+    const contentRange  = driveRes.headers.get('content-range');
+    const contentType   = 'video/mp4';
+
+    if (clientRange && contentLength && contentRange) {
+      // Partial stream response
+      res.writeHead(206, {
+        'Content-Type': contentType,
+        'Content-Length': contentLength,
+        'Content-Range': contentRange,
+        'Accept-Ranges': 'bytes',
+      });
+    } else {
+      // Full stream fallback
+      res.writeHead(200, {
+        'Content-Type': contentType,
+        'Content-Length': contentLength || '0',
+        'Accept-Ranges': 'bytes',
+      });
+    }
+
+    driveRes.data.pipe(res);
+  } catch (err) {
+    console.error('❌ Stream error:', err.message);
     res.status(500).send('حدث خطأ أثناء جلب الفيديو');
   }
 });
