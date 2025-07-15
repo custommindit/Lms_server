@@ -8,6 +8,7 @@ const cors = require("cors");
 const http = require("http");
 const multer = require('multer');
 
+const { google } = require('googleapis');
 
 require('dotenv').config();
 
@@ -37,6 +38,30 @@ const corsOptions = {
   };
 
 
+
+const auth = new google.auth.GoogleAuth({
+  keyFile: './service-account.json',
+  scopes: ['https://www.googleapis.com/auth/drive']
+});
+
+app.get('/video/:fileId', async (req, res) => {
+  try {
+    const drive = google.drive({ version: 'v3', auth });
+    const { fileId } = req.params;
+
+    const { data } = await drive.files.get({
+      fileId,
+      alt: 'media'
+    }, { responseType: 'stream' });
+
+    res.setHeader('Content-Type', 'video/mp4');
+    data.pipe(res);
+
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).send('حدث خطأ أثناء جلب الفيديو');
+  }
+});
 const server = http.createServer(app);
 
 server.setTimeout(20 * 60 * 1000);
