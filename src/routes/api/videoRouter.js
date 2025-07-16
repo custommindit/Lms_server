@@ -7,14 +7,9 @@ const Student = require("../../models/student");
 const Section = require("../../models/section");
 const Unit = require("../../models/unit");
 
-// 1. Resolve correct path for service account credentials
-const SERVICE_ACCOUNT_PATH = path.resolve(
-  __dirname,
-  "../../config/service-account.json"
-);
 // Initialize Google Auth
 const auth = new google.auth.GoogleAuth({
-  keyFile: SERVICE_ACCOUNT_PATH,
+  keyFile: './src/config/service-account.json',
   scopes: ["https://www.googleapis.com/auth/drive"],
 });
 
@@ -92,34 +87,34 @@ router.get("/:fileId", async (req, res) => {
 
     const driveOptions = {
       fileId,
-      alt: "media",
+      alt: 'media',
     };
 
     const headers = clientRange ? { Range: clientRange } : undefined;
 
     const driveRes = await drive.files.get(driveOptions, {
-      responseType: "stream",
+      responseType: 'stream',
       headers,
     });
 
-    const contentLength = driveRes.headers["content-length"];
-    const contentRange = driveRes.headers["content-range"];
-    const contentType = driveRes.headers["content-type"] || "video/mp4";
+    const contentLength = driveRes.headers.get('content-length');
+    const contentRange  = driveRes.headers.get('content-range');
+    const contentType   = 'video/mp4';
 
     if (clientRange && contentLength && contentRange) {
       // Partial stream response
       res.writeHead(206, {
-        "Content-Type": contentType,
-        "Content-Length": contentLength,
-        "Content-Range": contentRange,
-        "Accept-Ranges": "bytes",
+        'Content-Type': contentType,
+        'Content-Length': contentLength,
+        'Content-Range': contentRange,
+        'Accept-Ranges': 'bytes',
       });
     } else {
       // Full stream fallback
       res.writeHead(200, {
-        "Content-Type": contentType,
-        "Content-Length": contentLength || "0",
-        "Accept-Ranges": "bytes",
+        'Content-Type': contentType,
+        'Content-Length': contentLength || '0',
+        'Accept-Ranges': 'bytes',
       });
     }
 
