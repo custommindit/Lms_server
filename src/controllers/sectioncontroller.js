@@ -88,14 +88,31 @@ module.exports.updateone = async (req, res) => {
   try {
     let id = req.params.id;
     const current = await Section.findOne({ _id: id });
+
+    const extractVideoId = (url) => {
+      if (!url) return url;
+
+      // Google Drive
+      const driveRegex =
+        /(?:drive\.google\.com\/file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/;
+      const match = url.match(driveRegex);
+
+      return match ? match[1] : url;
+    };
+
+    const videoIdOrLink = req.body.video
+      ? extractVideoId(req.body.video)
+      : current.video;
+
     var toupdate = {
       description: req.body.description,
       name: req.body.name,
       time: req.body.time,
+      video: videoIdOrLink,
     };
-    if (req.file !== undefined) {
-      toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
-    }
+    // if (req.file !== undefined) {
+    //   toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
+    // }
     Section.findByIdAndUpdate(id, toupdate)
       .then(async (response) => {
         await Quiz.updateMany(
