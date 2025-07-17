@@ -21,23 +21,12 @@ module.exports.create = async (req, res) => {
     ) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
-    const extractVideoId = (url) => {
-      if (!url) return url;
-
-      // Google Drive
-      const driveRegex =
-        /(?:drive\.google\.com\/file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/;
-      const match = url.match(driveRegex);
-
-      return match ? match[1] : url;
-    };
-
-    const videoIdOrLink = extractVideoId(body.video);
+  
     const new_section = new Section({
       name: body.name,
       description: body.description,
       time: body.time,
-      video: videoIdOrLink,
+      video: body.video,
       unit: body.unit,
       level: unite.level,
     });
@@ -89,26 +78,12 @@ module.exports.updateone = async (req, res) => {
     let id = req.params.id;
     const current = await Section.findOne({ _id: id });
 
-    const extractVideoId = (url) => {
-      if (!url) return url;
-
-      // Google Drive
-      const driveRegex =
-        /(?:drive\.google\.com\/file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/;
-      const match = url.match(driveRegex);
-
-      return match ? match[1] : url;
-    };
-
-    const videoIdOrLink = req.body.video
-      ? extractVideoId(req.body.video)
-      : current.video;
 
     var toupdate = {
       description: req.body.description,
       name: req.body.name,
       time: req.body.time,
-      video: videoIdOrLink,
+      video: req.body.video,
     };
     // if (req.file !== undefined) {
     //   toupdate.video = "http://77.37.51.112:8753/" + req.file.path;

@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const router = require("./src/routes/index");
 const cors = require("cors");
 const http = require("http");
-const videoRoutes = require("./src/routes/api/videoRouter");
+
 
 require("dotenv").config();
 
@@ -35,7 +35,7 @@ const connectDB = async () => {
   }
 };
 
-app.use("/video", videoRoutes);
+
 const server = http.createServer(app);
 
 server.setTimeout(20 * 60 * 1000);
