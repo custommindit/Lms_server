@@ -14,11 +14,7 @@ module.exports.create = async (req, res) => {
   try {
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (
-      unite === null ||
-      !req.body.decoded.admin ||
-      req.body.decoded.email !== isEmailAdmin()
-    ) {
+    if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
 
@@ -30,26 +26,21 @@ module.exports.create = async (req, res) => {
       unit: body.unit,
       level: unite.level,
     });
-    new_section
-      .save()
-      .then(async (response) => {
-        if (response) {
-          await add_time(body.unit, response.time);
-          return res.json({
-            Success: true,
-            message: `Section (${response.name}) Created`,
-            data: response,
-          });
-        }
-      })
-      .catch((saveError) => {
-        console.error("Error saving section:", saveError.message);
-        res
-          .status(500)
-          .json({ Success: false, message: "Failed to save section" });
-      });
+    new_section.save().then(async (response) => {
+      if (response) {
+        await add_time(body.unit, response.time);
+        return res.json({
+          Success: true,
+          message: `Section (${response.name}) Created`,
+          data: response,
+        });
+      }
+    }).catch((saveError) => {
+      console.error('Error saving section:', saveError.message);
+      res.status(500).json({ Success: false, message: "Failed to save section" });
+    });
   } catch (error) {
-    console.error("Unexpected error in create:", error.message);
+    console.error('Unexpected error in create:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -57,18 +48,14 @@ module.exports.create = async (req, res) => {
 module.exports.getone = async (req, res) => {
   try {
     let id = req.params.id;
-    Section.findById(id)
-      .then((response) => {
-        return res.json({ Success: true, data: response });
-      })
-      .catch((findError) => {
-        console.error("Error finding section:", findError.message);
-        res
-          .status(500)
-          .json({ Success: false, message: "Failed to find section" });
-      });
+    Section.findById(id).then((response) => {
+      return res.json({ Success: true, data: response });
+    }).catch((findError) => {
+      console.error('Error finding section:', findError.message);
+      res.status(500).json({ Success: false, message: "Failed to find section" });
+    });
   } catch (error) {
-    console.error("Unexpected error in getone:", error.message);
+    console.error('Unexpected error in getone:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -112,24 +99,16 @@ module.exports.updateone = async (req, res) => {
           { section: req.params.id },
           { name: req.body.name }
         );
-        await Unit.updateOne(
-          { _id: current.unit },
-          { $inc: { totaltime: toupdate.time - current.time } }
-        );
-        await Quiz.updateMany(
-          { section: current._id },
-          { name: req.body.name }
-        );
+        await Unit.updateOne({ _id: current.unit }, { $inc: { totaltime: toupdate.time - current.time } });
+        await Quiz.updateMany({ section: current._id }, { name: req.body.name });
         return res.json({ Success: true, message: "Updated" });
       })
       .catch((updateError) => {
-        console.error("Error updating section:", updateError.message);
-        res
-          .status(500)
-          .json({ Success: false, message: "Failed to update section" });
+        console.error('Error updating section:', updateError.message);
+        res.status(500).json({ Success: false, message: "Failed to update section" });
       });
   } catch (error) {
-    console.error("Unexpected error in updateone:", error.message);
+    console.error('Unexpected error in updateone:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -167,21 +146,17 @@ module.exports.deleteone = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Unexpected error in deleteone:", error.message);
+    console.error('Unexpected error in deleteone:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
 
 module.exports.createwithupload = async (req, res) => {
   try {
-    console.log("Upload started at", new Date());
+    console.log('Upload started at', new Date());
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (
-      unite === null ||
-      !req.body.decoded.admin ||
-      req.body.decoded.email !== isEmailAdmin()
-    ) {
+    if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
     if (req.file === undefined) {
@@ -192,7 +167,7 @@ module.exports.createwithupload = async (req, res) => {
       name: body.name,
       description: body.description,
       time: body.time,
-      video: "http://77.37.51.112:8753/" + req.file.path,
+      video: "http://77.37.86.189:8753/" + req.file.path,
       unit: body.unit,
       level: unite.level,
     });
@@ -207,11 +182,11 @@ module.exports.createwithupload = async (req, res) => {
         });
       }
     } catch (saveError) {
-      console.error("Error saving section:", saveError.message);
+      console.error('Error saving section:', saveError.message);
       return res.json({ Success: false, message: "Failed to save section" });
     }
   } catch (error) {
-    console.error("Unexpected error in createwithupload:", error.message);
+    console.error('Unexpected error in createwithupload:', error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
