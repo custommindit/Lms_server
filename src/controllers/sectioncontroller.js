@@ -21,7 +21,7 @@ module.exports.create = async (req, res) => {
     ) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
-  
+
     const new_section = new Section({
       name: body.name,
       description: body.description,
@@ -78,16 +78,34 @@ module.exports.updateone = async (req, res) => {
     let id = req.params.id;
     const current = await Section.findOne({ _id: id });
 
-
     var toupdate = {
       description: req.body.description,
       name: req.body.name,
       time: req.body.time,
-      video: req.body.video,
     };
-    // if (req.file !== undefined) {
-    //   toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
-    // }
+
+    if (req.file) {
+
+      if (current.video) {
+        try {
+          const videoPath = current.video.replace("http://77.37.51.112:8753/", "");
+          const fullPath = path.join(__dirname, '..', videoPath);
+          
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+            console.log(`Deleted old video: ${fullPath}`);
+          }
+        } catch (err) {
+          console.error("Error deleting old video:", err.message);
+        }
+      }
+      
+      // Set new video path
+      toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
+    } else if (req.body.video) {
+      // Use direct video URL if provided
+      toupdate.video = req.body.video;
+    }
     Section.findByIdAndUpdate(id, toupdate)
       .then(async (response) => {
         await Quiz.updateMany(
@@ -123,6 +141,15 @@ module.exports.deleteone = async (req, res) => {
     } else {
       let id = req.params.id;
       const deleted = await Section.findById(id);
+      if (!deleted) {
+        return res.json({ success: false, message: "Section Not Found" });
+      }
+      if (deleted.video) {
+        const videoPath = path.join(__dirname, "..", deleted.video);
+        if (fs.existsSync(videoPath)) {
+          fs.unlinkSync(videoPath);
+        }
+      }
       const quizArr = await Quiz.find({ section: deleted._id });
       await add_time(deleted.unit, 0 - deleted.time);
       await removesectionSTD(id);
@@ -160,7 +187,7 @@ module.exports.createwithupload = async (req, res) => {
     if (req.file === undefined) {
       return res.json({ Success: false, message: "No video uploaded" });
     }
-    console.log("Uploaded file size:", req.file.size);
+ 
     const new_section = new Section({
       name: body.name,
       description: body.description,

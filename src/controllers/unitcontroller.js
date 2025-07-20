@@ -8,9 +8,11 @@ const {
   delete_std_unit,
 } = require("./misc");
 const { isEmailAdmin } = require("../utils/staticEmail.js");
+const fs = require("fs");
+const path = require("path");
+const Section = require("../models/section");
 module.exports.create = async (req, res) => {
   try {
-    console.log(req.file);
     let body = req.body;
     const new_unit = new Unit({
       name: body.name,
@@ -133,6 +135,31 @@ module.exports.update = async (req, res) => {
 module.exports.delete = async (req, res) => {
   try {
     if (req.body.decoded.admin && req.body.decoded.email === isEmailAdmin()) {
+      const unit = await Unit.findById(req.params.id);
+
+      if (!unit) {
+        return res.json({ Success: false, message: "Unit not found" });
+      }
+
+      if (unit.image) {
+        const imagePath = path.join(__dirname, "..", unit.image);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      }
+
+      const sections = await Section.find({ unit: req.params.id });
+
+      for (const section of sections) {
+        if (section.video) {
+          const videoPath = path.join(__dirname, "..", section.video);
+          if (fs.existsSync(videoPath)) {
+            fs.unlinkSync(videoPath);
+          }
+        }
+      }
+
+      await Section.deleteMany({ unit: req.params.id });
       await delete_parts(req.params.id);
       await delete_std_unit(req.params.id);
       Unit.deleteOne({ _id: req.params.id }).then((response) => {
@@ -149,7 +176,7 @@ module.exports.delete = async (req, res) => {
 module.exports.get_std_number = async (req, res) => {
   try {
     const id = req.params.id;
-    let fakeexists = await FakeViews.findOne({ unit_id: id});
+    let fakeexists = await FakeViews.findOne({ unit_id: id });
     if (fakeexists !== null) {
       return res.json({
         Success: true,
@@ -157,12 +184,11 @@ module.exports.get_std_number = async (req, res) => {
       });
     } else {
       const count = await buycount(id);
-      console.log(count)
-        return res.json({
-          Success: true,
-          count: count,
-        });
-        
+      console.log(count);
+      return res.json({
+        Success: true,
+        count: count,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -194,16 +220,28 @@ module.exports.all_units_data=async(req,res)=>{
 
 module.exports.update = async (req, res) => {
   try {
-    if (!req.body.decoded.admin && req.body.decoded.email!==isEmailAdmin()) {
+    if (!req.body.decoded.admin && req.body.decoded.email !== isEmailAdmin()) {
       return res.json({ Success: false, message: "Missing auth level 0" });
     }
     let updated = { Success: false, message: "SOME ERROR OCCURED" };
     let body = req.body;
-    if (req.file && req.file.path) updated.image = req.file.path;
 
     updated.name = body.name;
     updated.price = body.price;
     updated.level = body.level;
+
+    if (req.file && req.file.path) {
+      const currentUnit = await Unit.findById(body._id);
+
+      if (currentUnit && currentUnit.image) {
+        const oldImagePath = path.join(__dirname, "..", currentUnit.image);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+
+      updated.image = req.file.path;
+    }
 
     Unit.findByIdAndUpdate(body._id, updated, { new: true }).then(
       async (response) => {
@@ -233,6 +271,12 @@ module.exports.update = async (req, res) => {
     );
   } catch (error) {
     console.log(error.message);
+    if (req.file && req.file.path) {
+      const newImagePath = path.join(__dirname, "..", req.file.path);
+      if (fs.existsSync(newImagePath)) {
+        fs.unlinkSync(newImagePath);
+      }
+    }
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
