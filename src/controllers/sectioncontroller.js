@@ -75,7 +75,7 @@ module.exports.updateone = async (req, res) => {
 
       if (current.video) {
         try {
-          const videoPath = current.video.replace("http://77.37.51.112:8753/", "");
+          const videoPath = current.video.replace("http://77.37.86.189:8753/", "");
           const fullPath = path.join(__dirname, '..', videoPath);
           
           if (fs.existsSync(fullPath)) {
@@ -88,7 +88,7 @@ module.exports.updateone = async (req, res) => {
       }
       
       // Set new video path
-      toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
+      toupdate.video = "http://77.37.86.189:8753/" + req.file.path;
     } else if (req.body.video) {
       // Use direct video URL if provided
       toupdate.video = req.body.video;
