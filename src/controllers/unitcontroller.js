@@ -152,7 +152,11 @@ module.exports.delete = async (req, res) => {
 
       for (const section of sections) {
         if (section.video) {
-          const videoPath = path.join(__dirname, "..", section.video);
+          const relativePath = section?.video?.replace(
+            "http://77.37.86.189:8753",
+            ""
+          );
+          const videoPath = path.join(__dirname, "..", relativePath);
           if (fs.existsSync(videoPath)) {
             fs.unlinkSync(videoPath);
           }

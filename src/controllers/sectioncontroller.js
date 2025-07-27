@@ -9,12 +9,18 @@ const Quiz = require("../models/quiz");
 const Grade = require("../models/grade");
 const Unit = require("../models/unit");
 const { isEmailAdmin } = require("../utils/staticEmail.js");
+const fs = require("fs");
+const path = require("path");
 
 module.exports.create = async (req, res) => {
   try {
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
+    if (
+      unite === null ||
+      !req.body.decoded.admin ||
+      req.body.decoded.email !== isEmailAdmin()
+    ) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
 
@@ -26,21 +32,26 @@ module.exports.create = async (req, res) => {
       unit: body.unit,
       level: unite.level,
     });
-    new_section.save().then(async (response) => {
-      if (response) {
-        await add_time(body.unit, response.time);
-        return res.json({
-          Success: true,
-          message: `Section (${response.name}) Created`,
-          data: response,
-        });
-      }
-    }).catch((saveError) => {
-      console.error('Error saving section:', saveError.message);
-      res.status(500).json({ Success: false, message: "Failed to save section" });
-    });
+    new_section
+      .save()
+      .then(async (response) => {
+        if (response) {
+          await add_time(body.unit, response.time);
+          return res.json({
+            Success: true,
+            message: `Section (${response.name}) Created`,
+            data: response,
+          });
+        }
+      })
+      .catch((saveError) => {
+        console.error("Error saving section:", saveError.message);
+        res
+          .status(500)
+          .json({ Success: false, message: "Failed to save section" });
+      });
   } catch (error) {
-    console.error('Unexpected error in create:', error.message);
+    console.error("Unexpected error in create:", error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -48,14 +59,18 @@ module.exports.create = async (req, res) => {
 module.exports.getone = async (req, res) => {
   try {
     let id = req.params.id;
-    Section.findById(id).then((response) => {
-      return res.json({ Success: true, data: response });
-    }).catch((findError) => {
-      console.error('Error finding section:', findError.message);
-      res.status(500).json({ Success: false, message: "Failed to find section" });
-    });
+    Section.findById(id)
+      .then((response) => {
+        return res.json({ Success: true, data: response });
+      })
+      .catch((findError) => {
+        console.error("Error finding section:", findError.message);
+        res
+          .status(500)
+          .json({ Success: false, message: "Failed to find section" });
+      });
   } catch (error) {
-    console.error('Unexpected error in getone:', error.message);
+    console.error("Unexpected error in getone:", error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -72,12 +87,14 @@ module.exports.updateone = async (req, res) => {
     };
 
     if (req.file) {
-
       if (current.video) {
         try {
-          const videoPath = current.video.replace("http://77.37.86.189:8753/", "");
-          const fullPath = path.join(__dirname, '..', videoPath);
-          
+          const videoPath = current.video.replace(
+            "http://77.37.51.112:8753/",
+            ""
+          );
+          const fullPath = path.join(__dirname, "..", videoPath);
+
           if (fs.existsSync(fullPath)) {
             fs.unlinkSync(fullPath);
             console.log(`Deleted old video: ${fullPath}`);
@@ -86,9 +103,9 @@ module.exports.updateone = async (req, res) => {
           console.error("Error deleting old video:", err.message);
         }
       }
-      
+
       // Set new video path
-      toupdate.video = "http://77.37.86.189:8753/" + req.file.path;
+      toupdate.video = "http://77.37.51.112:8753/" + req.file.path;
     } else if (req.body.video) {
       // Use direct video URL if provided
       toupdate.video = req.body.video;
@@ -99,16 +116,24 @@ module.exports.updateone = async (req, res) => {
           { section: req.params.id },
           { name: req.body.name }
         );
-        await Unit.updateOne({ _id: current.unit }, { $inc: { totaltime: toupdate.time - current.time } });
-        await Quiz.updateMany({ section: current._id }, { name: req.body.name });
+        await Unit.updateOne(
+          { _id: current.unit },
+          { $inc: { totaltime: toupdate.time - current.time } }
+        );
+        await Quiz.updateMany(
+          { section: current._id },
+          { name: req.body.name }
+        );
         return res.json({ Success: true, message: "Updated" });
       })
       .catch((updateError) => {
-        console.error('Error updating section:', updateError.message);
-        res.status(500).json({ Success: false, message: "Failed to update section" });
+        console.error("Error updating section:", updateError.message);
+        res
+          .status(500)
+          .json({ Success: false, message: "Failed to update section" });
       });
   } catch (error) {
-    console.error('Unexpected error in updateone:', error.message);
+    console.error("Unexpected error in updateone:", error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
@@ -124,7 +149,12 @@ module.exports.deleteone = async (req, res) => {
         return res.json({ success: false, message: "Section Not Found" });
       }
       if (deleted.video) {
-        const videoPath = path.join(__dirname, "..", deleted.video);
+        const relativePath = deleted?.video?.replace(
+          "http://77.37.86.189:8753",
+          ""
+        );
+        const videoPath = path.join(__dirname, "..", relativePath);
+
         if (fs.existsSync(videoPath)) {
           fs.unlinkSync(videoPath);
         }
@@ -146,23 +176,27 @@ module.exports.deleteone = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Unexpected error in deleteone:', error.message);
+    console.error("Unexpected error in deleteone:", error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
 
 module.exports.createwithupload = async (req, res) => {
   try {
-    console.log('Upload started at', new Date());
+    console.log("Upload started at", new Date());
     let body = req.body;
     const unite = await unit_exists(body.unit);
-    if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
+    if (
+      unite === null ||
+      !req.body.decoded.admin ||
+      req.body.decoded.email !== isEmailAdmin()
+    ) {
       return res.json({ Success: false, message: "Unit doesn't exist" });
     }
     if (req.file === undefined) {
       return res.json({ Success: false, message: "No video uploaded" });
     }
- 
+
     const new_section = new Section({
       name: body.name,
       description: body.description,
@@ -182,11 +216,11 @@ module.exports.createwithupload = async (req, res) => {
         });
       }
     } catch (saveError) {
-      console.error('Error saving section:', saveError.message);
+      console.error("Error saving section:", saveError.message);
       return res.json({ Success: false, message: "Failed to save section" });
     }
   } catch (error) {
-    console.error('Unexpected error in createwithupload:', error.message);
+    console.error("Unexpected error in createwithupload:", error.message);
     return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
