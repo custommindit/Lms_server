@@ -89,11 +89,14 @@ module.exports.updateone = async (req, res) => {
     if (req.file) {
       if (current.video) {
         try {
-          const videoPath = current.video.replace(
-            "http://77.37.51.112:8753/",
-            ""
+          const fileName = current.video.split("/").pop();
+          const fullPath = path.join(
+            __dirname,
+            "..",
+            "..",
+            "uploads",
+            fileName
           );
-          const fullPath = path.join(__dirname, "..", videoPath);
 
           if (fs.existsSync(fullPath)) {
             fs.unlinkSync(fullPath);
@@ -149,11 +152,8 @@ module.exports.deleteone = async (req, res) => {
         return res.json({ success: false, message: "Section Not Found" });
       }
       if (deleted.video) {
-        const relativePath = deleted?.video?.replace(
-          "http://77.37.86.189:8753",
-          ""
-        );
-        const videoPath = path.join(__dirname, "..", relativePath);
+        const fileName = deleted.video.split("/").pop();
+        const videoPath = path.join(__dirname, "..", "..", "uploads", fileName);
 
         if (fs.existsSync(videoPath)) {
           fs.unlinkSync(videoPath);

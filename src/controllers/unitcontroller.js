@@ -142,7 +142,7 @@ module.exports.delete = async (req, res) => {
       }
 
       if (unit.image) {
-        const imagePath = path.join(__dirname, "..", unit.image);
+        const imagePath = path.join(__dirname, "..", "..", unit.image);
         if (fs.existsSync(imagePath)) {
           fs.unlinkSync(imagePath);
         }
@@ -152,11 +152,15 @@ module.exports.delete = async (req, res) => {
 
       for (const section of sections) {
         if (section.video) {
-          const relativePath = section?.video?.replace(
-            "http://77.37.86.189:8753",
-            ""
+          const fileName = section.video.split("/").pop();
+
+          const videoPath = path.join(
+            __dirname,
+            "..",
+            "..",
+            "uploads",
+            fileName
           );
-          const videoPath = path.join(__dirname, "..", relativePath);
           if (fs.existsSync(videoPath)) {
             fs.unlinkSync(videoPath);
           }
