@@ -21,7 +21,7 @@ const corsOptions = {
   app.use(cors(corsOptions));
   app.use(express.json({ limit: "600mb" }));
   app.use(router)
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
   
   app.options('*', (req, res) => {
     res.sendStatus(200);

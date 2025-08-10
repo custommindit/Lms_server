@@ -8,6 +8,6 @@ services:
     # image: a7medabdo6/care_managment
     volumes:
       - ./src:/App/src:ro
-      - ~/hestuploads:/lms_app/uploads
+      - ./uploads:/lms_app/uploads
     ports:
       - "8753:8753"

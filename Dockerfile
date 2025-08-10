@@ -1,10 +1,12 @@
-FROM node:14.19.3
+FROM node:20-alpine
 
 WORKDIR /lms_app
 
 COPY package.json .
 
-RUN npm install --force
+RUN npm install --only=production
+RUN npm cache clean --force
+
 
 COPY . .
 
