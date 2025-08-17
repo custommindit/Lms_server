@@ -184,82 +184,43 @@ module.exports.deleteone = async (req, res) => {
 module.exports.createwithupload = async (req, res) => {
   try {
     console.log("Upload started at", new Date());
-    
-    // التحقق من وجود الوحدة (معلق حالياً)
-    // let body = req.body;
-    // const unite = await unit_exists(body.unit);
-    // if (unite === null || !req.body.decoded.admin || req.body.decoded.email !== isEmailAdmin()) {
-    //   return res.json({ Success: false, message: "Unit doesn't exist" });
-    // }
-    
-    if (!req.file) {
-      return res.json({ Success: false, message: "No chunk uploaded" });
+    let body = req.body;
+    const unite = await unit_exists(body.unit);
+    if (
+      unite === null ||
+      !req.body.decoded.admin ||
+      req.body.decoded.email !== isEmailAdmin()
+    ) {
+      return res.json({ Success: false, message: "Unit doesn't exist" });
+    }
+    if (req.file === undefined) {
+      return res.json({ Success: false, message: "No video uploaded" });
     }
 
-    const fileId = req.headers["x-file-id"] || Date.now().toString();
-    const fileName = req.headers["x-file-name"] || `${fileId}.mp4`;
-    const chunkIndex = parseInt(req.headers["x-chunk-index"]) || 0;
-    const totalChunks = parseInt(req.headers["x-total-chunks"]) || 1;
-    
-    // مسار الملف النهائي
-    const finalPath = path.join(__dirname, "../../uploads", fileName);
-    // مسار الـ chunk المؤقت
-    const chunkPath = req.file.path;
-
-    // إذا كانت هذه هي الـ chunk الأولى، تأكد من عدم وجود ملف قديم
-    if (chunkIndex === 0 && fs.existsSync(finalPath)) {
-      fs.unlinkSync(finalPath);
-    }
-
-    // قراءة الـ chunk وإضافته للملف النهائي
-    const chunkData = fs.readFileSync(chunkPath);
-    fs.appendFileSync(finalPath, chunkData);
-    
-    // حذف الـ chunk المؤقت
-    fs.unlinkSync(chunkPath);
-
-    console.log(`✅ Chunk ${chunkIndex + 1}/${totalChunks} uploaded for ${fileName}`);
-
-    // إذا كانت هذه آخر chunk
-    if (chunkIndex === totalChunks - 1) {
-      console.log(`🎉 File ${fileName} upload completed!`);
-      
-      // هنا يمكنك حفظ بيانات الفيديو في قاعدة البيانات
-      // const new_section = new Section({
-      //   name: body.name,
-      //   description: body.description,
-      //   time: body.time,
-      //   video: "http://77.37.86.189:8753/" + fileName,
-      //   unit: body.unit,
-      //   level: unite.level,
-      // });
-      // await new_section.save();
-      // await add_time(body.unit, response.time);
-
-      return res.json({
-        Success: true,
-        message: "File upload completed",
-        fileId,
-        fileName,
-        filePath: finalPath
-      });
-    }
-
-    return res.json({
-      Success: true,
-      message: "Chunk uploaded successfully",
-      fileId,
-      fileName,
-      chunkIndex,
-      totalChunks
+    const new_section = new Section({
+      name: body.name,
+      description: body.description,
+      time: body.time,
+      video: "http://77.37.86.189:8753/" + req.file.path,
+      unit: body.unit,
+      level: unite.level,
     });
-
+    try {
+      const response = await new_section.save();
+      if (response) {
+        await add_time(body.unit, response.time);
+        return res.json({
+          Success: true,
+          message: `Section (${response.name}) Created`,
+          data: response,
+        });
+      }
+    } catch (saveError) {
+      console.error("Error saving section:", saveError.message);
+      return res.json({ Success: false, message: "Failed to save section" });
+    }
   } catch (error) {
-    console.error("Error in createwithupload:", error);
-    return res.status(500).json({ 
-      Success: false, 
-      message: "An error occurred",
-      error: error.message 
-    });
+    console.error("Unexpected error in createwithupload:", error.message);
+    return res.json({ Success: false, message: "SOME ERROR OCCURED" });
   }
 };
