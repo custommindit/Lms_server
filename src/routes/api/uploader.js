@@ -1,5 +1,5 @@
 const multer = require('multer');
-const { v4: uuidv4 } = require("uuid");
+const uuidv4 = require('uuid/v4');
 const fs = require("fs");
 const path = require("path");
 // Set up the multer storage configuration
