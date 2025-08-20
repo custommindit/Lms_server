@@ -6,8 +6,23 @@ services:
       dockerfile: Dockerfile
     container_name: lms_app_container
     # image: a7medabdo6/care_managment
+    environment:
+      - NODE_ENV=production
+      - NODE_OPTIONS=--max-old-space-size=2048
     volumes:
       - ./src:/App/src:ro
       - ./uploads:/lms_app/uploads
     ports:
       - "8753:8753"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8753/ || exit 1"]
+      interval: 30s
+      timeout: 20m   # 20 minute timeout for health checks
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 2G  # Memory limit
+    # Add these stop/timeout configurations
+    stop_grace_period: 20m  # Give container 20 minutes to stop gracefully
+    # Add Node.js specific environment variables
